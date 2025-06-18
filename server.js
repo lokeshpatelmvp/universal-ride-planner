@@ -70,8 +70,8 @@ app.post('/api/reset-rides', (req, res) => {
     res.json({ success: true });
 });
 
-// Serve static files from the client directory
-app.use(express.static('client'));
+// Serve static files from the dist directory
+app.use(express.static('dist'));
 
 app.listen(PORT, HOST, () => {
     console.log(`Server running at http://${HOST}:${PORT}`);
