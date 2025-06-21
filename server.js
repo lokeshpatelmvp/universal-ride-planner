@@ -161,68 +161,85 @@ app.post('/api/reset-rides', (req, res) => {
     res.json({ success: true });
 });
 
-// Trigger data update and return fresh data
+// Trigger data update and return fresh data (Node.js version - no Python required)
 app.post('/api/refresh-data', async (req, res) => {
     try {
-        console.log('🔄 Triggering data refresh...');
+        console.log('🔄 Triggering data refresh (Node.js version)...');
         
-        // Run the Python script
-        const pythonProcess = spawn('python', ['extract_today_data.py'], {
-            cwd: __dirname,
-            stdio: 'pipe'
+        // Use Node.js to fetch data instead of Python
+        const axios = require('axios');
+        const cheerio = require('cheerio');
+        const fs = require('fs');
+        const path = require('path');
+        
+        // Get current date in Eastern Time
+        const now = new Date();
+        const etOffset = -5; // Eastern Time is UTC-5 (or UTC-4 during DST)
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const today = new Date(utc + (etOffset * 3600000));
+        const todayStr = today.toISOString().split('T')[0];
+        
+        console.log(`Fetching data for date: ${todayStr}`);
+        
+        // Fetch current wait times
+        const response = await axios.get('https://www.thrill-data.com/waits/park/uor/epic-universe/', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
         });
         
-        let output = '';
-        let errorOutput = '';
+        const $ = cheerio.load(response.data);
+        const rides = [];
         
-        pythonProcess.stdout.on('data', (data) => {
-            output += data.toString();
-            console.log('Python output:', data.toString());
+        // Parse current wait times
+        $('table').each((i, table) => {
+            const tableText = $(table).text();
+            if (tableText.includes('ATTRACTION') && tableText.includes('REQ')) {
+                $(table).find('tr').each((j, row) => {
+                    const cells = $(row).find('td');
+                    if (cells.length >= 4) {
+                        const attraction = $(cells[0]).text().trim();
+                        const heightReq = $(cells[1]).text().trim();
+                        const waitTime = $(cells[3]).text().trim();
+                        
+                        if (attraction && waitTime && !isNaN(parseInt(waitTime))) {
+                            rides.push({
+                                name: attraction,
+                                waitTime: parseInt(waitTime),
+                                heightReq: heightReq,
+                                status: "Open",
+                                wait_times: [{ time: "Current", wait: parseInt(waitTime) }]
+                            });
+                        }
+                    }
+                });
+            }
         });
         
-        pythonProcess.stderr.on('data', (data) => {
-            errorOutput += data.toString();
-            console.error('Python error:', data.toString());
-        });
+        // Create the data structure
+        const todayData = {
+            date: todayStr,
+            park: "Epic Universe",
+            rides: rides
+        };
         
-        // Wait for the Python script to complete
-        await new Promise((resolve, reject) => {
-            pythonProcess.on('close', (code) => {
-                if (code !== 0) {
-                    console.error('Python script failed with code:', code);
-                    console.error('Error output:', errorOutput);
-                    reject(new Error(`Python script failed: ${errorOutput}`));
-                } else {
-                    console.log('✅ Data refresh completed successfully');
-                    resolve();
-                }
-            });
-            
-            pythonProcess.on('error', (error) => {
-                console.error('Failed to start Python script:', error);
-                reject(error);
-            });
-        });
-        
-        // Now return the fresh data
+        // Ensure data directory exists
         const dataDir = path.join(__dirname, 'data');
-        const files = fs.readdirSync(dataDir)
-            .filter(file => file.startsWith('today_waits_') && file.endsWith('.json'))
-            .sort()
-            .reverse();
-        
-        if (files.length === 0) {
-            return res.status(404).json({ error: 'No today data found after refresh' });
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
         }
         
-        const latestFile = path.join(dataDir, files[0]);
-        const data = JSON.parse(fs.readFileSync(latestFile, 'utf8'));
+        // Save to file
+        const outputFile = path.join(dataDir, `today_waits_${todayStr}.json`);
+        fs.writeFileSync(outputFile, JSON.stringify(todayData, null, 2));
+        
+        console.log(`✅ Data refresh completed successfully. Saved ${rides.length} rides to ${outputFile}`);
         
         res.json({ 
             success: true, 
-            message: 'Data refreshed successfully',
-            data: data,
-            output: output
+            message: 'Data refreshed successfully (Node.js version)',
+            data: todayData,
+            ridesCount: rides.length
         });
         
     } catch (error) {
