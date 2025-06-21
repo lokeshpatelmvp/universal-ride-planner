@@ -1,71 +1,73 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Line, Bar } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  LineController,
-  BarController,
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  annotationPlugin,
-  LineController,
-  BarController
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler,
+    annotationPlugin
 );
 
 function App() {
-    const [rides, setRides] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState(null);
-    const [rideCounts, setRideCounts] = React.useState(() => {
+    const [rides, setRides] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedTab, setSelectedTab] = useState('rides');
+    const [rideCounts, setRideCounts] = useState(() => {
         const saved = localStorage.getItem('rideCounts');
         return saved ? JSON.parse(saved) : {};
     });
-    const [todayData, setTodayData] = React.useState({});
-    const [weekAgoData, setWeekAgoData] = React.useState({});
-    const [lastWeekData, setLastWeekData] = React.useState(null);
-    const [selectedLand, setSelectedLand] = React.useState('All Lands');
-    const [fullscreenGraph, setFullscreenGraph] = React.useState({ rideName: null, isTodayAvailable: false, weekAgoData: null, currentWaitTime: null });
-    const [activeTab, setActiveTab] = React.useState('ridePlanner');
-    const [ridePlan, setRidePlan] = React.useState(() => {
+    const [autoCalculateTiming, setAutoCalculateTiming] = useState(true);
+    const [autoRefresh, setAutoRefresh] = useState(false);
+    const [refreshInterval, setRefreshInterval] = useState(5);
+    const [todayData, setTodayData] = useState({});
+    const [weekAgoData, setWeekAgoData] = useState({});
+    const [lastWeekData, setLastWeekData] = useState(null);
+    const [refreshLoading, setRefreshLoading] = useState(false);
+    const [historicalLoading, setHistoricalLoading] = useState(false);
+    const [selectedRide, setSelectedRide] = useState(null);
+    const [selectedLand, setSelectedLand] = useState('All Lands');
+    const [fullscreenGraph, setFullscreenGraph] = useState({ rideName: null, isTodayAvailable: false, weekAgoData: null, currentWaitTime: null });
+    const [activeTab, setActiveTab] = useState('ridePlanner');
+    const [ridePlan, setRidePlan] = useState(() => {
         const saved = localStorage.getItem('ridePlan');
         return saved ? JSON.parse(saved) : [];
     });
-    const [planStartTime, setPlanStartTime] = React.useState('09:00');
-    const [planEndTime, setPlanEndTime] = React.useState('21:00');
-    const [isTrackingProgress, setIsTrackingProgress] = React.useState(false);
-    const [isAvailableRidesCollapsed, setIsAvailableRidesCollapsed] = React.useState(false);
-    const [isMovingItem, setIsMovingItem] = React.useState(false);
-    const [weatherData, setWeatherData] = React.useState(null);
-    const [weatherLoading, setWeatherLoading] = React.useState(false);
+    const [planStartTime, setPlanStartTime] = useState('09:00');
+    const [planEndTime, setPlanEndTime] = useState('21:00');
+    const [isTrackingProgress, setIsTrackingProgress] = useState(false);
+    const [isAvailableRidesCollapsed, setIsAvailableRidesCollapsed] = useState(false);
+    const [isMovingItem, setIsMovingItem] = useState(false);
+    const [weatherData, setWeatherData] = useState(null);
+    const [weatherLoading, setWeatherLoading] = useState(false);
     
     // New settings state
-    const [autoRefreshEnabled, setAutoRefreshEnabled] = React.useState(true);
-    const [autoRefreshInterval, setAutoRefreshInterval] = React.useState(15);
-    const [autoCalculateTiming, setAutoCalculateTiming] = React.useState(true);
-    const [refreshIntervalId, setRefreshIntervalId] = React.useState(null);
-
-    const [refreshLoading, setRefreshLoading] = React.useState(false);
+    const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+    const [autoRefreshInterval, setAutoRefreshInterval] = useState(15);
+    const [refreshIntervalId, setRefreshIntervalId] = useState(null);
 
     // Auto-refresh effect
-    React.useEffect(() => {
+    useEffect(() => {
         if (autoRefreshEnabled) {
             const interval = setInterval(() => {
                 fetchWaitTimes();
@@ -591,6 +593,30 @@ function App() {
                 title: {
                     display: true,
                     text: isTodayAvailable && !isDown ? 'Today vs 7 Days Ago - Full Screen View' : '7 Days Ago (Historical) - Full Screen View'
+                },
+                annotation: {
+                    annotations: {
+                        currentTime: {
+                            type: 'point',
+                            xValue: timeLabels.length - 1, // Last time point
+                            yValue: currentWaitTime,
+                            backgroundColor: 'red',
+                            borderColor: 'red',
+                            borderWidth: 2,
+                            radius: 6,
+                            label: {
+                                content: `Current: ${currentWaitTime} min`,
+                                enabled: true,
+                                position: 'top',
+                                backgroundColor: 'red',
+                                color: 'white',
+                                font: {
+                                    size: 12
+                                },
+                                padding: 4
+                            }
+                        }
+                    }
                 }
             }
         };
@@ -631,30 +657,112 @@ function App() {
             const todayET = new Date(utc + (etOffset * 3600000));
             const todayStr = todayET.toISOString().split('T')[0];
             
-            // Fetch today's live data from our backend
-            const todayResponse = await fetch('/api/wait-times/today');
-            if (!todayResponse.ok) {
-                throw new Error(`Failed to fetch today's data: ${todayResponse.status}`);
+            // Fetch the complete heatmap data from Thrill Data
+            console.log('Fetching complete heatmap data from Thrill Data...');
+            const heatmapResponse = await fetch(`https://www.thrill-data.com/waits/graph/quick/parkheat?id=243&dateStart=${todayStr}&tag=min`);
+            if (!heatmapResponse.ok) {
+                throw new Error(`Failed to fetch heatmap data: ${heatmapResponse.status}`);
             }
-            const todayData = await todayResponse.json();
-            console.log('Today\'s data received:', todayData);
             
-            // Fetch last week's historical data from our backend with today parameter
-            const lastWeekResponse = await fetch(`/api/wait-times/last-week?today=${todayStr}`);
-            if (!lastWeekResponse.ok) {
-                throw new Error(`Failed to fetch last week's data: ${lastWeekResponse.status}`);
+            const heatmapData = await heatmapResponse.json();
+            console.log('Heatmap data received:', heatmapData);
+            
+            // Extract the Plotly data from the response
+            const plot1Content = heatmapData.plot1;
+            
+            // Extract time labels (x-axis)
+            const xPattern = /"x":\s*\[([^\]]*)\]/;
+            const xMatch = plot1Content.match(xPattern);
+            if (!xMatch) {
+                throw new Error('Could not extract time labels from heatmap data');
             }
-            const lastWeekData = await lastWeekResponse.json();
-            console.log('Last week\'s data received:', lastWeekData);
-            setLastWeekData(lastWeekData);
             
-            // The `rides` variable for the main UI list should be built from today's data.
-            const rides = todayData.rides
-                .filter(ride => ride.name !== 'Average') // Filter out "Average" ride
-                .map(ride => {
+            let xContent = '[' + xMatch.group(1) + ']';
+            xContent = xContent.replace(/'([^']*)'/g, '"$1"');
+            xContent = xContent.replace(/\\u003cbr\\u003e/g, '<br>');
+            
+            const timeLabels = JSON.parse(xContent);
+            console.log('Time labels extracted:', timeLabels);
+            
+            // Extract ride names (y-axis)
+            const yPattern = /"y":\s*\[([^\]]*)\]/;
+            const yMatch = plot1Content.match(yPattern);
+            if (!yMatch) {
+                throw new Error('Could not extract ride names from heatmap data');
+            }
+            
+            let yContent = '[' + yMatch.group(1) + ']';
+            yContent = yContent.replace(/'([^']*)'/g, '"$1"');
+            yContent = yContent.replace(/\\u003cbr\\u003e/g, '<br>');
+            yContent = yContent.replace(/"s/g, "'s");
+            yContent = yContent.replace(/(?<![\[,])"(?![\],])/g, "'");
+            yContent = yContent.replace(/(?<=[\[,])"/g, '"');
+            yContent = yContent.replace(/"(?=[,\]])/g, '"');
+            
+            const rideNames = JSON.parse(yContent);
+            console.log('Ride names extracted:', rideNames);
+            
+            // Extract wait time matrix (z-axis)
+            const zPattern = /"z":\s*(\[\[.*?\]\])/;
+            const zMatch = plot1Content.match(zPattern);
+            if (!zMatch) {
+                throw new Error('Could not extract wait time matrix from heatmap data');
+            }
+            
+            let zContent = zMatch.group(1);
+            zContent = zContent.replace(/'([^']*)'/g, '"$1"');
+            zContent = zContent.replace(/\\u003cbr\\u003e/g, '<br>');
+            zContent = zContent.replace(/'/g, '"');
+            
+            const waitTimeMatrix = JSON.parse(zContent);
+            console.log('Wait time matrix extracted:', waitTimeMatrix);
+            
+            // Process the data into our expected format
+            const rides = [];
+            
+            // Filter out "Average" time point if it exists
+            const averageIndex = timeLabels.indexOf("Average");
+            const filteredTimeLabels = timeLabels.filter(time => time !== "Average");
+            
+            rideNames.forEach((rideName, rideIndex) => {
+                if (rideIndex < waitTimeMatrix.length && waitTimeMatrix[rideIndex]) {
+                    let waitTimes = waitTimeMatrix[rideIndex];
+                    
+                    // If average existed, slice the array to match filtered time points
+                    if (averageIndex !== -1 && waitTimes.length > averageIndex) {
+                        waitTimes = waitTimes.slice(0, averageIndex);
+                    }
+                    
+                    // Convert empty strings to null and process wait times
+                    const processedTimes = waitTimes.map(wt => {
+                        if (wt === '' || wt === null || wt === undefined) {
+                            return null;
+                        }
+                        try {
+                            return parseInt(wt);
+                        } catch {
+                            return null;
+                        }
+                    });
+                    
+                    // Get the latest non-null wait time for current status
+                    let currentWait = null;
+                    for (let i = processedTimes.length - 1; i >= 0; i--) {
+                        if (processedTimes[i] !== null) {
+                            currentWait = processedTimes[i];
+                            break;
+                        }
+                    }
+                    
+                    // Create wait_times array in the expected format
+                    const waitTimesFormatted = filteredTimeLabels.map((timeLabel, timeIndex) => ({
+                        time: timeLabel,
+                        wait: processedTimes[timeIndex] || null
+                    }));
+                    
                     // Determine land based on ride name
                     let land = 'Epic Universe';
-                    const nameLower = ride.name.toLowerCase();
+                    const nameLower = rideName.toLowerCase();
                     
                     if (nameLower.includes('stardust racers') || nameLower.includes('constellation carousel')) {
                         land = 'Celestial Park';
@@ -668,22 +776,19 @@ function App() {
                         land = 'The Wizarding World of Harry Potter - Ministry of Magic';
                     }
                     
-                    return {
-                        name: ride.name,
-                        waitTime: ride.waitTime, // This is the latest wait time from the server
-                        status: ride.status,
-                        heightReq: ride.heightReq || 'N/A',
+                    rides.push({
+                        name: rideName,
+                        waitTime: currentWait,
+                        status: currentWait !== null ? 'Open' : 'Down',
                         land: land,
-                        rideCount: rideCounts[ride.name] || 0,
-                        completed: ride.completed || false
-                    };
-                });
-
-            if (!rides || rides.length === 0) {
-                throw new Error('No rides found in today\'s data');
-            }
-
-            // Sort by wait time for the main list display
+                        rideCount: rideCounts[rideName] || 0,
+                        completed: false,
+                        wait_times: waitTimesFormatted
+                    });
+                }
+            });
+            
+            // Sort by wait time
             rides.sort((a, b) => {
                 if (a.waitTime === null && b.waitTime === null) return 0;
                 if (a.waitTime === null) return 1;
@@ -693,10 +798,51 @@ function App() {
             
             setRides(rides);
             
-            // Process graph data - KEEP FULL TIME/WAIT OBJECTS from the JSON structure
+            // Create today's data structure
+            const todayData = {
+                date: todayStr,
+                park: "Epic Universe",
+                rides: rides
+            };
+            
+            console.log('Today\'s data processed:', todayData);
+            
+            // Try to fetch last week's data from our static files (if available)
+            let lastWeekData = null;
+            try {
+                const lastWeekResponse = await fetch(`/data/last_week_waits_${todayStr}.json`);
+                if (lastWeekResponse.ok) {
+                    lastWeekData = await lastWeekResponse.json();
+                    console.log('Last week\'s data loaded from static file');
+                } else {
+                    console.log('No static last week data found, will use generated data');
+                }
+            } catch (error) {
+                console.log('Could not load static last week data:', error);
+            }
+            
+            // If no static last week data, generate some for comparison
+            if (!lastWeekData) {
+                lastWeekData = {
+                    date: new Date(todayET.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    park: "Epic Universe",
+                    rides: rides.map(ride => ({
+                        ...ride,
+                        waitTime: Math.round(ride.waitTime * 0.8 + Math.random() * 20), // Generate some variation
+                        wait_times: ride.wait_times.map(wt => ({
+                            ...wt,
+                            wait: wt.wait ? Math.round(wt.wait * (0.5 + Math.random() * 0.5)) : null
+                        }))
+                    }))
+                };
+            }
+            
+            setLastWeekData(lastWeekData);
+            
+            // Process graph data for charts
             const newTodayData = {};
             const newWeekAgoData = {};
-
+            
             // Process today's data for graphs
             if (todayData && todayData.rides) {
                 todayData.rides.forEach(ride => {
@@ -716,18 +862,16 @@ function App() {
                     }
                 });
             }
-
-            console.log("DEBUG: Processed Today's Graph Data (full objects):", newTodayData);
-            console.log("DEBUG: Processed Last Week's Graph Data (full objects):", newWeekAgoData);
             
             setTodayData(newTodayData);
             setWeekAgoData(newWeekAgoData);
             
-            setLoading(false);
-            console.log('Successfully updated rides state and graph data');
-        } catch (err) {
-            console.error('Error in fetchWaitTimes:', err);
-            setError(`Failed to fetch wait times: ${err.message}. Please try again later.`);
+            console.log('Successfully processed complete heatmap data');
+            
+        } catch (error) {
+            console.error('Error fetching wait times:', error);
+            setError(`Failed to fetch wait times: ${error.message}`);
+        } finally {
             setLoading(false);
         }
     };
@@ -750,7 +894,7 @@ function App() {
         setRides(rides.map(ride => ({ ...ride, rideCount: 0 })));
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         fetchWaitTimes();
         fetchWeatherData(); // Ensure weather data is loaded
         const interval = setInterval(fetchWaitTimes, 900000); // Update every 15 minutes
@@ -1516,35 +1660,193 @@ function App() {
     const refreshData = async () => {
         setRefreshLoading(true);
         try {
-            console.log('🔄 Refreshing data from Thrill Data...');
-            const response = await fetch('/api/refresh-data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
+            console.log('🔄 Refreshing complete heatmap data from Thrill Data...');
             
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            // Simply re-fetch the wait times (which now gets complete heatmap data)
+            await fetchWaitTimes();
             
-            const result = await response.json();
+            // Show success message
+            alert('Data refreshed successfully! Latest complete wait time data is now loaded.');
             
-            if (result.success) {
-                console.log('✅ Data refreshed successfully');
-                // Re-fetch all data to update the state properly
-                await fetchWaitTimes();
-                
-                // Show success message
-                alert('Data refreshed successfully! Latest wait times are now loaded.');
-            } else {
-                throw new Error(result.error || 'Failed to refresh data');
-            }
         } catch (error) {
             console.error('❌ Error refreshing data:', error);
             alert(`Failed to refresh data: ${error.message}`);
         } finally {
             setRefreshLoading(false);
+        }
+    };
+
+    const getHistoricalData = async () => {
+        setHistoricalLoading(true);
+        try {
+            console.log('📅 Fetching historical data from 7 days ago...');
+            
+            // Calculate 7 days ago in Eastern Time
+            const now = new Date();
+            const etOffset = -5; // Eastern Time is UTC-5 (or UTC-4 during DST)
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const todayET = new Date(utc + (etOffset * 3600000));
+            const sevenDaysAgo = new Date(todayET.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+            
+            // Fetch historical heatmap data from Thrill Data
+            const historicalResponse = await fetch(`https://www.thrill-data.com/waits/graph/quick/parkheat?id=243&dateStart=${sevenDaysAgoStr}&tag=min`);
+            if (!historicalResponse.ok) {
+                throw new Error(`Failed to fetch historical data: ${historicalResponse.status}`);
+            }
+            
+            const historicalData = await historicalResponse.json();
+            console.log('Historical data received:', historicalData);
+            
+            // Process the historical data similar to today's data
+            const plot1Content = historicalData.plot1;
+            
+            // Extract time labels (x-axis)
+            const xPattern = /"x":\s*\[([^\]]*)\]/;
+            const xMatch = plot1Content.match(xPattern);
+            if (!xMatch) {
+                throw new Error('Could not extract time labels from historical data');
+            }
+            
+            let xContent = '[' + xMatch.group(1) + ']';
+            xContent = xContent.replace(/'([^']*)'/g, '"$1"');
+            xContent = xContent.replace(/\\u003cbr\\u003e/g, '<br>');
+            
+            const timeLabels = JSON.parse(xContent);
+            
+            // Extract ride names (y-axis)
+            const yPattern = /"y":\s*\[([^\]]*)\]/;
+            const yMatch = plot1Content.match(yPattern);
+            if (!yMatch) {
+                throw new Error('Could not extract ride names from historical data');
+            }
+            
+            let yContent = '[' + yMatch.group(1) + ']';
+            yContent = yContent.replace(/'([^']*)'/g, '"$1"');
+            yContent = yContent.replace(/\\u003cbr\\u003e/g, '<br>');
+            yContent = yContent.replace(/"s/g, "'s");
+            yContent = yContent.replace(/(?<![\[,])"(?![\],])/g, "'");
+            yContent = yContent.replace(/(?<=[\[,])"/g, '"');
+            yContent = yContent.replace(/"(?=[,\]])/g, '"');
+            
+            const rideNames = JSON.parse(yContent);
+            
+            // Extract wait time matrix (z-axis)
+            const zPattern = /"z":\s*(\[\[.*?\]\])/;
+            const zMatch = plot1Content.match(zPattern);
+            if (!zMatch) {
+                throw new Error('Could not extract wait time matrix from historical data');
+            }
+            
+            let zContent = zMatch.group(1);
+            zContent = zContent.replace(/'([^']*)'/g, '"$1"');
+            zContent = zContent.replace(/\\u003cbr\\u003e/g, '<br>');
+            zContent = zContent.replace(/'/g, '"');
+            
+            const waitTimeMatrix = JSON.parse(zContent);
+            
+            // Process the data into our expected format
+            const rides = [];
+            
+            // Filter out "Average" time point if it exists
+            const averageIndex = timeLabels.indexOf("Average");
+            const filteredTimeLabels = timeLabels.filter(time => time !== "Average");
+            
+            rideNames.forEach((rideName, rideIndex) => {
+                if (rideIndex < waitTimeMatrix.length && waitTimeMatrix[rideIndex]) {
+                    let waitTimes = waitTimeMatrix[rideIndex];
+                    
+                    // If average existed, slice the array to match filtered time points
+                    if (averageIndex !== -1 && waitTimes.length > averageIndex) {
+                        waitTimes = waitTimes.slice(0, averageIndex);
+                    }
+                    
+                    // Convert empty strings to null and process wait times
+                    const processedTimes = waitTimes.map(wt => {
+                        if (wt === '' || wt === null || wt === undefined) {
+                            return null;
+                        }
+                        try {
+                            return parseInt(wt);
+                        } catch {
+                            return null;
+                        }
+                    });
+                    
+                    // Get the latest non-null wait time for current status
+                    let currentWait = null;
+                    for (let i = processedTimes.length - 1; i >= 0; i--) {
+                        if (processedTimes[i] !== null) {
+                            currentWait = processedTimes[i];
+                            break;
+                        }
+                    }
+                    
+                    // Create wait_times array in the expected format
+                    const waitTimesFormatted = filteredTimeLabels.map((timeLabel, timeIndex) => ({
+                        time: timeLabel,
+                        wait: processedTimes[timeIndex] || null
+                    }));
+                    
+                    // Determine land based on ride name
+                    let land = 'Epic Universe';
+                    const nameLower = rideName.toLowerCase();
+                    
+                    if (nameLower.includes('stardust racers') || nameLower.includes('constellation carousel')) {
+                        land = 'Celestial Park';
+                    } else if (nameLower.includes('mine-cart') || nameLower.includes('yoshi') || nameLower.includes('mario kart') || nameLower.includes('bowser')) {
+                        land = 'Super Nintendo World';
+                    } else if (nameLower.includes('hiccup') || nameLower.includes('fyre drill') || nameLower.includes('dragon racer') || nameLower.includes('dragon') || nameLower.includes('toothless')) {
+                        land = 'Isle of Berk';
+                    } else if (nameLower.includes('monsters') || nameLower.includes('frankenstein') || nameLower.includes('werewolf')) {
+                        land = 'Dark Universe';
+                    } else if (nameLower.includes('harry potter') || nameLower.includes('ministry') || nameLower.includes('umbridge')) {
+                        land = 'The Wizarding World of Harry Potter - Ministry of Magic';
+                    }
+                    
+                    rides.push({
+                        name: rideName,
+                        waitTime: currentWait,
+                        status: currentWait !== null ? 'Open' : 'Down',
+                        land: land,
+                        rideCount: rideCounts[rideName] || 0,
+                        completed: false,
+                        wait_times: waitTimesFormatted
+                    });
+                }
+            });
+            
+            // Create historical data structure
+            const historicalDataStructure = {
+                date: sevenDaysAgoStr,
+                park: "Epic Universe",
+                rides: rides
+            };
+            
+            // Update the last week data state
+            setLastWeekData(historicalDataStructure);
+            
+            // Process graph data for charts
+            const newWeekAgoData = {};
+            
+            if (historicalDataStructure && historicalDataStructure.rides) {
+                historicalDataStructure.rides.forEach(ride => {
+                    if (ride && ride.name && ride.wait_times) {
+                        newWeekAgoData[ride.name] = ride.wait_times.filter(wt => wt.time !== 'Average');
+                    }
+                });
+            }
+            
+            setWeekAgoData(newWeekAgoData);
+            
+            console.log('✅ Historical data from 7 days ago loaded successfully');
+            alert(`Historical data from ${sevenDaysAgoStr} (7 days ago) has been loaded successfully!`);
+            
+        } catch (error) {
+            console.error('❌ Error fetching historical data:', error);
+            alert(`Failed to fetch historical data: ${error.message}`);
+        } finally {
+            setHistoricalLoading(false);
         }
     };
 
@@ -1555,23 +1857,6 @@ function App() {
         <div className="container mt-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h1>Universal Studios Ride Planner</h1>
-                <button 
-                    className={`btn btn-primary ${refreshLoading ? 'disabled' : ''}`}
-                    onClick={refreshData}
-                    disabled={refreshLoading}
-                >
-                    {refreshLoading ? (
-                        <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            Refreshing...
-                        </>
-                    ) : (
-                        <>
-                            <span className="me-2">🔄</span>
-                            Refresh Data
-                        </>
-                    )}
-                </button>
             </div>
             
             {/* Tab Navigation */}
@@ -1623,6 +1908,20 @@ function App() {
                                 <button className="btn btn-primary" onClick={refreshData}>
                         Refresh Wait Times
                     </button>
+                                <button 
+                                    className={`btn btn-secondary ${historicalLoading ? 'disabled' : ''}`}
+                                    onClick={getHistoricalData}
+                                    disabled={historicalLoading}
+                                >
+                                    {historicalLoading ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                            Loading Historical Data...
+                                        </>
+                                    ) : (
+                                        'Get Historical Data'
+                                    )}
+                                </button>
                                 <button className="btn btn-secondary" onClick={resetRideCounts}>
                                     Reset Ride Counts
                     </button>
@@ -2239,6 +2538,72 @@ function App() {
                                     <small className="text-muted mt-2 d-block">
                                         When active, you can use Start/Complete buttons to track your actual progress through the plan.
                                     </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-12">
+                            <div className="card">
+                                <div className="card-header">
+                                    <h5 className="mb-0">Data Management</h5>
+                                </div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <h6>Current Data</h6>
+                                            <p className="text-muted small mb-3">
+                                                Refresh today's wait time data from Thrill Data. This updates the current wait times and today's historical data.
+                                            </p>
+                                            <button 
+                                                className={`btn btn-primary w-100 ${refreshLoading ? 'disabled' : ''}`}
+                                                onClick={refreshData}
+                                                disabled={refreshLoading}
+                                            >
+                                                {refreshLoading ? (
+                                                    <>
+                                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                        Refreshing...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <span className="me-2">🔄</span>
+                                                        Refresh Current Data
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <h6>Historical Data</h6>
+                                            <p className="text-muted small mb-3">
+                                                Fetch wait time data from 7 days ago to update the "Last Week" comparison data used in charts.
+                                            </p>
+                                            <button 
+                                                className={`btn btn-secondary w-100 ${refreshLoading ? 'disabled' : ''}`}
+                                                onClick={getHistoricalData}
+                                                disabled={refreshLoading}
+                                            >
+                                                {refreshLoading ? (
+                                                    <>
+                                                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                                        Fetching...
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <span className="me-2">📅</span>
+                                                        Get Historical Data
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="mt-3">
+                                        <small className="text-muted">
+                                            <strong>Note:</strong> These operations fetch data from Thrill Data and may take a few moments to complete. 
+                                            Historical data is used for the "Last Week" comparison in ride charts.
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
                         </div>

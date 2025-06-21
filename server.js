@@ -214,6 +214,87 @@ app.post('/api/refresh-data', async (req, res) => {
     }
 });
 
+// Get historical data from 7 days ago and save it
+app.post('/api/get-historical-data', async (req, res) => {
+    try {
+        console.log('📅 Fetching historical data from 7 days ago...');
+        
+        // Calculate the date 7 days ago in Eastern Time
+        const now = new Date();
+        const etOffset = -5; // Eastern Time is UTC-5 (or UTC-4 during DST)
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const today = new Date(utc + (etOffset * 3600000));
+        const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+        
+        console.log(`Fetching data for date: ${sevenDaysAgoStr}`);
+        
+        // Run the Python script with the historical date
+        const pythonProcess = spawn('python', ['extract_today_data.py', sevenDaysAgoStr], {
+            cwd: __dirname,
+            stdio: 'pipe'
+        });
+        
+        let output = '';
+        let errorOutput = '';
+        
+        pythonProcess.stdout.on('data', (data) => {
+            output += data.toString();
+            console.log('Python output:', data.toString());
+        });
+        
+        pythonProcess.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+            console.error('Python error:', data.toString());
+        });
+        
+        // Wait for the Python script to complete
+        await new Promise((resolve, reject) => {
+            pythonProcess.on('close', (code) => {
+                if (code !== 0) {
+                    console.error('Python script failed with code:', code);
+                    console.error('Error output:', errorOutput);
+                    reject(new Error(`Python script failed: ${errorOutput}`));
+                } else {
+                    console.log('✅ Historical data fetch completed successfully');
+                    resolve();
+                }
+            });
+            
+            pythonProcess.on('error', (error) => {
+                console.error('Failed to start Python script:', error);
+                reject(error);
+            });
+        });
+        
+        // Check if the historical file was created
+        const dataDir = path.join(__dirname, 'data');
+        const historicalFilename = `last_week_waits_${sevenDaysAgoStr}.json`;
+        const historicalFilePath = path.join(dataDir, historicalFilename);
+        
+        if (!fs.existsSync(historicalFilePath)) {
+            return res.status(404).json({ 
+                error: `Historical data file not found: ${historicalFilename}`,
+                output: output 
+            });
+        }
+        
+        const data = JSON.parse(fs.readFileSync(historicalFilePath, 'utf8'));
+        
+        res.json({ 
+            success: true, 
+            message: `Historical data for ${sevenDaysAgoStr} fetched and saved successfully`,
+            date: sevenDaysAgoStr,
+            data: data,
+            output: output
+        });
+        
+    } catch (error) {
+        console.error('Error fetching historical data:', error);
+        res.status(500).json({ error: `Failed to fetch historical data: ${error.message}` });
+    }
+});
+
 // Serve static files from the dist directory
 app.use(express.static('dist'));
 

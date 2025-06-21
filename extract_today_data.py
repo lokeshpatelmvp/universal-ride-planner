@@ -3,12 +3,20 @@ import re
 import json
 from datetime import datetime
 import os
+import sys
 from bs4 import BeautifulSoup
 
-def extract_today_data():
-    """Extract today's wait time data and save it in the same format as last week's data"""
+def extract_today_data(target_date=None):
+    """Extract wait time data for a specific date and save it in the same format as last week's data"""
     
-    print("Extracting Today's Wait Time Data from Thrill Data...")
+    # Use provided date or default to today
+    if target_date:
+        today = target_date
+        print(f"Extracting Historical Wait Time Data from Thrill Data for {today}...")
+    else:
+        today = datetime.now().strftime('%Y-%m-%d')
+        print("Extracting Today's Wait Time Data from Thrill Data...")
+    
     print("=" * 60)
     
     headers = {
@@ -16,8 +24,7 @@ def extract_today_data():
     }
     
     try:
-        # Fetch the heatmap page for today
-        today = datetime.now().strftime('%Y-%m-%d')
+        # Fetch the heatmap page for the target date
         print(f"\nFetching heatmap data for {today}...")
         
         # First, get the main page to extract SVG time labels
@@ -214,14 +221,24 @@ def extract_today_data():
             "rides": rides
         }
         
-        # Save to file
-        output_file = f"data/today_waits_{today}.json"
+        # Save to file - use different naming for historical vs today's data
+        if target_date:
+            # For historical data, save as last_week_waits format
+            output_file = f"data/last_week_waits_{today}.json"
+        else:
+            # For today's data, save as today_waits format
+            output_file = f"data/today_waits_{today}.json"
+        
         os.makedirs("data", exist_ok=True)
         
         with open(output_file, 'w') as f:
             json.dump(today_data, f, indent=2)
         
-        print(f"Successfully saved today's data to {output_file}")
+        if target_date:
+            print(f"Successfully saved historical data to {output_file}")
+        else:
+            print(f"Successfully saved today's data to {output_file}")
+        
         print(f"Processed {len(rides)} rides with wait time data")
         
         # Print sample data for verification
@@ -230,11 +247,25 @@ def extract_today_data():
             data_points = len([wt for wt in ride['wait_times'] if wt['wait'] is not None])
             print(f"  {ride['name']}: {ride['waitTime']} min (current), {data_points} data points")
         
-        print("Data refresh completed successfully")
+        if target_date:
+            print("Historical data fetch completed successfully")
+        else:
+            print("Data refresh completed successfully")
         
     except Exception as e:
         print(f"Unexpected error: {e}")
         raise
 
 if __name__ == "__main__":
-    extract_today_data() 
+    # Check if a date was provided as command line argument
+    if len(sys.argv) > 1:
+        target_date = sys.argv[1]
+        # Validate date format (YYYY-MM-DD)
+        try:
+            datetime.strptime(target_date, '%Y-%m-%d')
+            extract_today_data(target_date)
+        except ValueError:
+            print(f"Invalid date format: {target_date}. Please use YYYY-MM-DD format.")
+            sys.exit(1)
+    else:
+        extract_today_data() 
