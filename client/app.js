@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { Line, Bar } from 'react-chartjs-2';
 import {
@@ -63,7 +63,7 @@ function App() {
     const [isAvailableRidesCollapsed, setIsAvailableRidesCollapsed] = useState(false);
     const [isMovingItem, setIsMovingItem] = useState(false);
     const [weatherData, setWeatherData] = useState(null);
-    const [weatherLoading, setWeatherLoading] = useState(false);
+    const [isWeatherLoading, setIsWeatherLoading] = useState(true);
     
     // New settings state
     const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
@@ -1090,47 +1090,34 @@ function App() {
 
     // Weather functions
     const fetchWeatherData = async () => {
-        setWeatherLoading(true);
+        setIsWeatherLoading(true);
         try {
-            // Since we can't directly scrape Weather Underground due to CORS, 
-            // we'll create a proxy endpoint or use a weather API
-            // For now, let's create a mock weather data structure based on the Orlando forecast
-            const mockWeatherData = {
-                location: 'Orlando, FL',
-                current: {
-                    temperature: 82,
-                    feelsLike: 88,
-                    humidity: 77,
-                    condition: 'Partly Cloudy'
-                },
-                hourly: [
-                    { hour: 9, temperature: 78, feelsLike: 82, precipitation: 20, condition: 'Partly Cloudy' },
-                    { hour: 10, temperature: 82, feelsLike: 86, precipitation: 15, condition: 'Partly Cloudy' },
-                    { hour: 11, temperature: 85, feelsLike: 90, precipitation: 25, condition: 'Partly Cloudy' },
-                    { hour: 12, temperature: 87, feelsLike: 93, precipitation: 40, condition: 'Cloudy' },
-                    { hour: 13, temperature: 88, feelsLike: 95, precipitation: 60, condition: 'Thunderstorm' },
-                    { hour: 14, temperature: 87, feelsLike: 94, precipitation: 80, condition: 'Heavy Rain' },
-                    { hour: 15, temperature: 86, feelsLike: 92, precipitation: 70, condition: 'Thunderstorm' },
-                    { hour: 16, temperature: 85, feelsLike: 90, precipitation: 50, condition: 'Light Rain' },
-                    { hour: 17, temperature: 84, feelsLike: 89, precipitation: 30, condition: 'Partly Cloudy' },
-                    { hour: 18, temperature: 82, feelsLike: 87, precipitation: 20, condition: 'Partly Cloudy' },
-                    { hour: 19, temperature: 80, feelsLike: 84, precipitation: 10, condition: 'Clear' },
-                    { hour: 20, temperature: 78, feelsLike: 82, precipitation: 5, condition: 'Clear' },
-                    { hour: 21, temperature: 76, feelsLike: 79, precipitation: 0, condition: 'Clear' }
-                ],
+            const response = await fetch('/api/weather');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            // Find the highest and lowest temp for the day from hourly data
+            const todayHigh = Math.max(...data.hourly.map(h => h.temperature));
+            const todayLow = Math.min(...data.hourly.map(h => h.temperature));
+
+            // Find the max precipitation chance for the day
+            const chanceOfRain = Math.max(...data.hourly.map(h => h.precipitation));
+
+            setWeatherData({
+                ...data,
                 forecast: {
-                    high: 88,
-                    low: 74,
-                    chanceOfRain: 80,
-                    description: 'Partly cloudy early then heavy thunderstorms this afternoon. High 88F. Winds SE at 5 to 10 mph. Chance of rain 80%. 1 to 2 inches of rain expected.'
+                    high: todayHigh,
+                    low: todayLow,
+                    chanceOfRain: chanceOfRain,
+                    description: data.current.condition, // Simple description for now
                 }
-            };
-            
-            setWeatherData(mockWeatherData);
+            });
         } catch (error) {
-            console.error('Error fetching weather data:', error);
+            console.error("Error fetching weather data:", error);
         } finally {
-            setWeatherLoading(false);
+            setIsWeatherLoading(false);
         }
     };
 
@@ -1650,7 +1637,7 @@ function App() {
 
             {activeTab === 'weather' && (
                 <div className="tab-content">
-                    {weatherLoading ? (
+                    {isWeatherLoading ? (
                         <div className="text-center">
                             <div className="spinner-border" role="status">
                                 <span className="visually-hidden">Loading weather...</span>

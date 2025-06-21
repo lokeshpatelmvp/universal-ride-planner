@@ -105,6 +105,47 @@ app.get('/api/wait-times/today', (req, res) => {
     }
 });
 
+// Get weather data
+app.get('/api/weather', async (req, res) => {
+    const apiKey = process.env.WEATHER_API_KEY;
+    if (!apiKey) {
+        return res.status(500).json({ error: 'Weather API key is not configured.' });
+    }
+
+    // Coordinates for Universal's Epic Universe
+    const lat = 28.4739;
+    const lon = -81.4688;
+    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,daily,alerts&units=imperial&appid=${apiKey}`;
+
+    try {
+        const response = await axios.get(url);
+        const weatherData = response.data;
+
+        // Transform data to match the structure expected by the frontend
+        const transformedData = {
+            current: {
+                temperature: Math.round(weatherData.current.temp),
+                feelsLike: Math.round(weatherData.current.feels_like),
+                condition: weatherData.current.weather[0].main,
+                icon: weatherData.current.weather[0].icon
+            },
+            hourly: weatherData.hourly.slice(0, 24).map(hour => ({
+                hour: new Date(hour.dt * 1000).getHours(),
+                temperature: Math.round(hour.temp),
+                feelsLike: Math.round(hour.feels_like),
+                precipitation: Math.round(hour.pop * 100), // Probability of precipitation
+                condition: hour.weather[0].main,
+                icon: hour.weather[0].icon,
+            })),
+        };
+        
+        res.json(transformedData);
+    } catch (error) {
+        console.error('Error fetching weather data:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'Failed to fetch weather data.' });
+    }
+});
+
 // Get wait times from Thrill Data (legacy endpoint - keep for compatibility)
 app.get('/api/wait-times', async (req, res) => {
     try {
