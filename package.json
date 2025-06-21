@@ -2,6 +2,7 @@
   "name": "universal-ride-planner",
   "version": "1.0.0",
   "description": "Universal Studios Ride Planner",
+  "homepage": "https://lokeshpatelmvp.github.io/universal-ride-planner",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
