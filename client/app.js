@@ -1168,10 +1168,32 @@ function App() {
     // Function to refresh data from Thrill Data
     const refreshData = async () => {
         setRefreshLoading(true);
-        await fetchWaitTimes();
-        // Also refresh historical data when manually refreshing
-        await fetchWeekAgoData();
-        setRefreshLoading(false);
+        try {
+            // Call the actual refresh endpoint that triggers Python script
+            const response = await fetch(`${config.apiBaseUrl}/api/refresh-data`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log('Refresh result:', result);
+            
+            // Now fetch the updated data
+            await fetchWaitTimes();
+            await fetchWeekAgoData();
+            
+        } catch (error) {
+            console.error('Error refreshing data:', error);
+            setError('Failed to refresh data: ' + error.message);
+        } finally {
+            setRefreshLoading(false);
+        }
     };
 
     const fetchWeekAgoData = async () => {
