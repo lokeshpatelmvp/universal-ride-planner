@@ -1092,7 +1092,7 @@ function App() {
     const fetchWeatherData = async () => {
         setIsWeatherLoading(true);
         try {
-            const response = await fetch('/api/weather');
+            const response = await fetch(`${config.apiBaseUrl}/api/weather`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -1156,12 +1156,9 @@ function App() {
     const refreshData = async () => {
         setRefreshLoading(true);
         try {
-            // Call the actual refresh endpoint that triggers Python script
+            console.log("🔄 Refreshing data from Thrill Data...");
             const response = await fetch(`${config.apiBaseUrl}/api/refresh-data`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
             });
             
             if (!response.ok) {
