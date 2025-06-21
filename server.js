@@ -179,42 +179,81 @@ app.post('/api/refresh-data', async (req, res) => {
         const today = new Date(utc + (etOffset * 3600000));
         const todayStr = today.toISOString().split('T')[0];
         
-        console.log(`Fetching data for date: ${todayStr}`);
+        console.log(`Fetching heatmap data for date: ${todayStr}`);
         
-        // Fetch current wait times
-        const response = await axios.get('https://www.thrill-data.com/waits/park/uor/epic-universe/', {
+        // Fetch the heatmap data (this gives us the full day's historical data)
+        const heatMapResponse = await axios.get('https://www.thrill-data.com/waits/graph/quick/parkheat', {
+            params: {
+                id: 243,  // Epic Universe park ID
+                dateStart: todayStr,
+                tag: 'min'
+            },
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             }
         });
         
-        const $ = cheerio.load(response.data);
+        // Extract the Plotly.newPlot data array
+        const plotData = heatMapResponse.data.plot1;
+        const dataArrayMatch = plotData.match(/Plotly\.newPlot\([^,]+,\s*(\[.*?\]),\s*\{/s);
+        
+        if (!dataArrayMatch) {
+            throw new Error('Could not extract Plotly data array');
+        }
+        
+        // Parse the data array
+        let dataArr;
+        try {
+            dataArr = eval(dataArrayMatch[1]);
+        } catch (e) {
+            throw new Error('Failed to parse Plotly data array: ' + e.message);
+        }
+        
+        const data = dataArr[0];
+        const z = data.z; // Wait times matrix
+        const y = data.y; // Ride names
+        const x = data.x; // Time labels
+        
+        console.log(`Extracted data: ${y.length} rides, ${x.length} time points`);
+        
+        // Process the data into the same format as the Python script
         const rides = [];
         
-        // Parse current wait times
-        $('table').each((i, table) => {
-            const tableText = $(table).text();
-            if (tableText.includes('ATTRACTION') && tableText.includes('REQ')) {
-                $(table).find('tr').each((j, row) => {
-                    const cells = $(row).find('td');
-                    if (cells.length >= 4) {
-                        const attraction = $(cells[0]).text().trim();
-                        const heightReq = $(cells[1]).text().trim();
-                        const waitTime = $(cells[3]).text().trim();
-                        
-                        if (attraction && waitTime && !isNaN(parseInt(waitTime))) {
-                            rides.push({
-                                name: attraction,
-                                waitTime: parseInt(waitTime),
-                                heightReq: heightReq,
-                                status: "Open",
-                                wait_times: [{ time: "Current", wait: parseInt(waitTime) }]
-                            });
-                        }
-                    }
+        for (let i = 0; i < y.length; i++) {
+            const rideName = y[i];
+            const waitTimes = z[i] || [];
+            
+            // Convert wait times to the expected format
+            const formattedWaitTimes = [];
+            for (let j = 0; j < x.length; j++) {
+                const timeLabel = x[j];
+                const waitTime = waitTimes[j];
+                
+                // Skip "Average" time point
+                if (timeLabel === "Average") continue;
+                
+                formattedWaitTimes.push({
+                    time: timeLabel,
+                    wait: waitTime === '' || waitTime === null ? null : parseInt(waitTime)
                 });
             }
-        });
+            
+            // Get current wait time (latest non-null value)
+            let currentWait = null;
+            for (let k = formattedWaitTimes.length - 1; k >= 0; k--) {
+                if (formattedWaitTimes[k].wait !== null) {
+                    currentWait = formattedWaitTimes[k].wait;
+                    break;
+                }
+            }
+            
+            rides.push({
+                name: rideName,
+                waitTime: currentWait,
+                status: currentWait !== null ? "Open" : "Down",
+                wait_times: formattedWaitTimes
+            });
+        }
         
         // Create the data structure
         const todayData = {
