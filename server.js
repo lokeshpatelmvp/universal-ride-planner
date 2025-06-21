@@ -36,12 +36,29 @@ app.get('/api/wait-times/last-week', (req, res) => {
         }
         const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
         const lastWeekStr = lastWeek.toISOString().split('T')[0];
-        const filename = `last_week_waits_${lastWeekStr}.json`;
-        const filePath = path.join(dataDir, filename);
-        if (!fs.existsSync(filePath)) {
-            return res.status(404).json({ error: `No last week data found for ${lastWeekStr}` });
+        
+        // Find the closest available historical data file
+        const historicalFiles = fs.readdirSync(dataDir)
+            .filter(file => file.startsWith('last_week_waits_') && file.endsWith('.json'))
+            .map(file => {
+                const dateMatch = file.match(/last_week_waits_(\d{4}-\d{2}-\d{2})\.json/);
+                return dateMatch ? { file, date: dateMatch[1] } : null;
+            })
+            .filter(item => item !== null)
+            .sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                const targetDate = new Date(lastWeekStr);
+                return Math.abs(dateA - targetDate) - Math.abs(dateB - targetDate);
+            });
+        
+        if (historicalFiles.length === 0) {
+            return res.status(404).json({ error: `No historical data files found` });
         }
-        console.log(`Using last week data file: ${filePath} (date: ${lastWeekStr})`);
+        
+        const closestFile = historicalFiles[0];
+        const filePath = path.join(dataDir, closestFile.file);
+        console.log(`Using last week data file: ${filePath} (date: ${closestFile.date}, requested: ${lastWeekStr})`);
         const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         res.json(data);
     } catch (error) {

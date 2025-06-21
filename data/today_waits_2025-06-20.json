@@ -198,6 +198,14 @@
         {
           "time": "08:30 PM",
           "wait": 5
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 5
         }
       ]
     },
@@ -397,12 +405,20 @@
         {
           "time": "08:30 PM",
           "wait": 25
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 25
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 25
         }
       ]
     },
     {
       "name": "Curse of the Werewolf",
-      "waitTime": 35,
+      "waitTime": 25,
       "status": "Open",
       "wait_times": [
         {
@@ -596,12 +612,20 @@
         {
           "time": "08:30 PM",
           "wait": 35
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 31
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 25
         }
       ]
     },
     {
       "name": "Dragon Racer's Rally",
-      "waitTime": 25,
+      "waitTime": 15,
       "status": "Open",
       "wait_times": [
         {
@@ -795,6 +819,14 @@
         {
           "time": "08:30 PM",
           "wait": 25
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 16
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 15
         }
       ]
     },
@@ -994,12 +1026,20 @@
         {
           "time": "08:30 PM",
           "wait": 5
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 5
         }
       ]
     },
     {
       "name": "Harry Potter ...e Ministry",
-      "waitTime": 75,
+      "waitTime": 35,
       "status": "Open",
       "wait_times": [
         {
@@ -1193,6 +1233,14 @@
         {
           "time": "08:30 PM",
           "wait": 75
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 52
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 35
         }
       ]
     },
@@ -1392,12 +1440,20 @@
         {
           "time": "08:30 PM",
           "wait": 90
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 90
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 90
         }
       ]
     },
     {
       "name": "Mario Kart: B... Challenge",
-      "waitTime": 35,
+      "waitTime": 20,
       "status": "Open",
       "wait_times": [
         {
@@ -1590,13 +1646,21 @@
         },
         {
           "time": "08:30 PM",
-          "wait": 35
+          "wait": 32
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 20
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 20
         }
       ]
     },
     {
       "name": "Meet Toothles...nd Friends",
-      "waitTime": 63,
+      "waitTime": 45,
       "status": "Open",
       "wait_times": [
         {
@@ -1789,7 +1853,15 @@
         },
         {
           "time": "08:30 PM",
-          "wait": 63
+          "wait": 56
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 45
         }
       ]
     },
@@ -1989,6 +2061,14 @@
         {
           "time": "08:30 PM",
           "wait": 90
+        },
+        {
+          "time": "08:45 PM",
+          "wait": null
+        },
+        {
+          "time": "09:00 PM",
+          "wait": null
         }
       ]
     },
@@ -2187,6 +2267,14 @@
         },
         {
           "time": "08:30 PM",
+          "wait": 10
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 10
+        },
+        {
+          "time": "09:00 PM",
           "wait": 10
         }
       ]
@@ -2387,12 +2475,20 @@
         {
           "time": "08:30 PM",
           "wait": 35
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 35
         }
       ]
     },
     {
       "name": "Yoshi's Adventure",
-      "waitTime": 20,
+      "waitTime": 30,
       "status": "Open",
       "wait_times": [
         {
@@ -2586,12 +2682,20 @@
         {
           "time": "08:30 PM",
           "wait": 20
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 29
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 30
         }
       ]
     },
     {
       "name": "Average",
-      "waitTime": 39,
+      "waitTime": 28,
       "status": "Open",
       "wait_times": [
         {
@@ -2785,6 +2889,14 @@
         {
           "time": "08:30 PM",
           "wait": 39
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 30
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 28
         }
       ]
     }

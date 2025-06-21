@@ -5,16 +5,18 @@ from datetime import datetime
 import os
 import sys
 from bs4 import BeautifulSoup
+import pytz
 
 def extract_today_data(target_date=None):
     """Extract wait time data for a specific date and save it in the same format as last week's data"""
     
-    # Use provided date or default to today
+    # Use provided date or default to today in US Eastern Time
+    eastern = pytz.timezone('US/Eastern')
     if target_date:
         today = target_date
         print(f"Extracting Historical Wait Time Data from Thrill Data for {today}...")
     else:
-        today = datetime.now().strftime('%Y-%m-%d')
+        today = datetime.now(eastern).strftime('%Y-%m-%d')
         print("Extracting Today's Wait Time Data from Thrill Data...")
     
     print("=" * 60)
