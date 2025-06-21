@@ -4,6 +4,7 @@ const cheerio = require('cheerio');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const { spawn } = require('child_process');
 require('dotenv').config();
 
 const app = express();
@@ -19,20 +20,29 @@ let completedRides = new Set();
 // Get last week's wait times (static JSON)
 app.get('/api/wait-times/last-week', (req, res) => {
     try {
-        // Find the most recent last week data file
         const dataDir = path.join(__dirname, 'data');
-        const files = fs.readdirSync(dataDir)
-            .filter(file => file.startsWith('last_week_waits_') && file.endsWith('.json'))
-            .sort()
-            .reverse();
-        
-        if (files.length === 0) {
-            return res.status(404).json({ error: 'No last week data found' });
+        // Allow ?today=YYYY-MM-DD for testing or mobile use
+        let todayStr = req.query.today;
+        let today;
+        if (todayStr && /^\d{4}-\d{2}-\d{2}$/.test(todayStr)) {
+            today = new Date(todayStr);
+        } else {
+            // Use Eastern Time for theme park operations
+            const now = new Date();
+            const etOffset = -5; // Eastern Time is UTC-5 (or UTC-4 during DST)
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            today = new Date(utc + (etOffset * 3600000));
+            todayStr = today.toISOString().split('T')[0];
         }
-        
-        const latestFile = path.join(dataDir, files[0]);
-        const data = JSON.parse(fs.readFileSync(latestFile, 'utf8'));
-        
+        const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const lastWeekStr = lastWeek.toISOString().split('T')[0];
+        const filename = `last_week_waits_${lastWeekStr}.json`;
+        const filePath = path.join(dataDir, filename);
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ error: `No last week data found for ${lastWeekStr}` });
+        }
+        console.log(`Using last week data file: ${filePath} (date: ${lastWeekStr})`);
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         res.json(data);
     } catch (error) {
         console.error('Error serving last week data:', error);
@@ -40,62 +50,41 @@ app.get('/api/wait-times/last-week', (req, res) => {
     }
 });
 
-// Get today's wait times (live from Thrill Data)
-app.get('/api/wait-times/today', async (req, res) => {
+// Get today's wait times (from extracted JSON file)
+app.get('/api/wait-times/today', (req, res) => {
     try {
-        const response = await axios.get('https://www.thrill-data.com/waittimes/epic-universe');
-        const $ = cheerio.load(response.data);
+        // Find the most recent today data file
+        const dataDir = path.join(__dirname, 'data');
+        const today = new Date().toISOString().split('T')[0];
+        console.log(`Looking for today's data files in: ${dataDir}`);
         
-        const rides = [];
+        const files = fs.readdirSync(dataDir)
+            .filter(file => file.startsWith('today_waits_') && file.endsWith('.json'))
+            .sort()
+            .reverse();
         
-        // Parse the wait times table
-        $('table tbody tr').each((i, element) => {
-            const name = $(element).find('td:first-child').text().trim();
-            const waitTimeText = $(element).find('td:nth-child(4)').text().trim();
-            const heightReq = $(element).find('td:nth-child(2)').text().trim();
-            
-            // Handle different wait time formats (numbers, "Weather Delay", "Down", etc.)
-            let waitTime = null;
-            let status = 'Open';
-            
-            if (waitTimeText.toLowerCase().includes('weather delay')) {
-                status = 'Weather Delay';
-            } else if (waitTimeText.toLowerCase().includes('down') || waitTimeText === '') {
-                status = 'Down';
-            } else {
-                const parsed = parseInt(waitTimeText);
-                if (!isNaN(parsed)) {
-                    waitTime = parsed;
-                }
-            }
-            
-            if (name) {
-                rides.push({
-                    name,
-                    waitTime,
-                    status,
-                    heightReq,
-                    completed: completedRides.has(name)
-                });
-            }
-        });
-
-        // Sort by wait time (null values last)
-        rides.sort((a, b) => {
-            if (a.waitTime === null && b.waitTime === null) return 0;
-            if (a.waitTime === null) return 1;
-            if (b.waitTime === null) return -1;
-            return a.waitTime - b.waitTime;
-        });
+        console.log(`Found today files: ${files.join(', ')}`);
         
-        res.json({
-            date: new Date().toISOString().split('T')[0],
-            park: "Epic Universe",
-            rides: rides
-        });
+        if (files.length === 0) {
+            console.log('No today data files found');
+            return res.status(404).json({ error: 'No today data found' });
+        }
+        
+        // Use the latest file (should be for today)
+        const latestFile = path.join(dataDir, files[0]);
+        console.log(`Reading file: ${latestFile}`);
+        
+        const fileContent = fs.readFileSync(latestFile, 'utf8');
+        console.log(`File size: ${fileContent.length} characters`);
+        console.log(`File preview: ${fileContent.substring(0, 200)}...`);
+        
+        const data = JSON.parse(fileContent);
+        console.log(`Successfully parsed JSON with ${data.rides ? data.rides.length : 0} rides`);
+        res.json(data);
     } catch (error) {
-        console.error('Error fetching today\'s wait times:', error);
-        res.status(500).json({ error: 'Failed to fetch today\'s wait times' });
+        console.error('Error serving today data:', error);
+        console.error('Error details:', error.message);
+        res.status(500).json({ error: 'Failed to load today data' });
     }
 });
 
@@ -153,6 +142,76 @@ app.get('/api/completed-rides', (req, res) => {
 app.post('/api/reset-rides', (req, res) => {
     completedRides.clear();
     res.json({ success: true });
+});
+
+// Trigger data update and return fresh data
+app.post('/api/refresh-data', async (req, res) => {
+    try {
+        console.log('🔄 Triggering data refresh...');
+        
+        // Run the Python script
+        const pythonProcess = spawn('python', ['extract_today_data.py'], {
+            cwd: __dirname,
+            stdio: 'pipe'
+        });
+        
+        let output = '';
+        let errorOutput = '';
+        
+        pythonProcess.stdout.on('data', (data) => {
+            output += data.toString();
+            console.log('Python output:', data.toString());
+        });
+        
+        pythonProcess.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+            console.error('Python error:', data.toString());
+        });
+        
+        // Wait for the Python script to complete
+        await new Promise((resolve, reject) => {
+            pythonProcess.on('close', (code) => {
+                if (code !== 0) {
+                    console.error('Python script failed with code:', code);
+                    console.error('Error output:', errorOutput);
+                    reject(new Error(`Python script failed: ${errorOutput}`));
+                } else {
+                    console.log('✅ Data refresh completed successfully');
+                    resolve();
+                }
+            });
+            
+            pythonProcess.on('error', (error) => {
+                console.error('Failed to start Python script:', error);
+                reject(error);
+            });
+        });
+        
+        // Now return the fresh data
+        const dataDir = path.join(__dirname, 'data');
+        const files = fs.readdirSync(dataDir)
+            .filter(file => file.startsWith('today_waits_') && file.endsWith('.json'))
+            .sort()
+            .reverse();
+        
+        if (files.length === 0) {
+            return res.status(404).json({ error: 'No today data found after refresh' });
+        }
+        
+        const latestFile = path.join(dataDir, files[0]);
+        const data = JSON.parse(fs.readFileSync(latestFile, 'utf8'));
+        
+        res.json({ 
+            success: true, 
+            message: 'Data refreshed successfully',
+            data: data,
+            output: output
+        });
+        
+    } catch (error) {
+        console.error('Error triggering data refresh:', error);
+        res.status(500).json({ error: `Failed to trigger data refresh: ${error.message}` });
+    }
 });
 
 // Serve static files from the dist directory

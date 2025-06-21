@@ -1,0 +1,4 @@
+BEFORE CLEANING:
+["Bowser Jr. Challenge","Constellation Carousel","Curse of the Werewolf","Dragon Racer"s Rally","Fyre Drill","Harry Potter ...e Ministry","Hiccup"s Wing Gliders","Mario Kart: B... Challenge","Meet Toothles...nd Friends","Mine-Cart Madness","Monsters Unch...Experiment","Stardust Racers","Yoshi's Adventure","Average"]
+AFTER CLEANING:
+["Bowser Jr. Challenge","Constellation Carousel","Curse of the Werewolf","Dragon Racer's Rally","Fyre Drill","Harry Potter ...e Ministry","Hiccup's Wing Gliders","Mario Kart: B... Challenge","Meet Toothles...nd Friends","Mine-Cart Madness","Monsters Unch...Experiment","Stardust Racers","Yoshi's Adventure","Average"]

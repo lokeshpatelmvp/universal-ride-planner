@@ -1,3 +1,35 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Line, Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  LineController,
+  BarController,
+} from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  annotationPlugin,
+  LineController,
+  BarController
+);
+
 function App() {
     const [rides, setRides] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
@@ -8,8 +40,9 @@ function App() {
     });
     const [todayData, setTodayData] = React.useState({});
     const [weekAgoData, setWeekAgoData] = React.useState({});
+    const [lastWeekData, setLastWeekData] = React.useState(null);
     const [selectedLand, setSelectedLand] = React.useState('All Lands');
-    const [fullscreenGraph, setFullscreenGraph] = React.useState({ rideName: null, todayData: null, weekAgoData: null, currentWaitTime: null });
+    const [fullscreenGraph, setFullscreenGraph] = React.useState({ rideName: null, isTodayAvailable: false, weekAgoData: null, currentWaitTime: null });
     const [activeTab, setActiveTab] = React.useState('ridePlanner');
     const [ridePlan, setRidePlan] = React.useState(() => {
         const saved = localStorage.getItem('ridePlan');
@@ -28,6 +61,8 @@ function App() {
     const [autoRefreshInterval, setAutoRefreshInterval] = React.useState(15);
     const [autoCalculateTiming, setAutoCalculateTiming] = React.useState(true);
     const [refreshIntervalId, setRefreshIntervalId] = React.useState(null);
+
+    const [refreshLoading, setRefreshLoading] = React.useState(false);
 
     // Auto-refresh effect
     React.useEffect(() => {
@@ -55,84 +90,10 @@ function App() {
     //     }
     // }, [ridePlan, autoCalculateTiming]);
 
-    // Function to generate today's actual data (up to current time)
-    const generateTodayActualData = (currentWaitTime, rideName) => {
-        const now = new Date();
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-        const currentTimeOfDay = currentHour + currentMinute / 60;
-        
-        // Check if ride is down - use the status from the API if available
-        const ride = rides.find(r => r.name === rideName);
-        const isDown = ride && (ride.status === 'Down' || ride.status === 'Weather Delay') || 
-                      !currentWaitTime || currentWaitTime === 'Down' || currentWaitTime === 'Weather Delay' ||
-                      (typeof currentWaitTime !== 'number' && isNaN(parseInt(currentWaitTime)));
-        
-        const data = [];
-        
-        // Generate data points for each 15-minute interval from 10:00 AM to 9:00 PM
-        for (let hour = 10; hour <= 21; hour++) {
-            for (let minute = 0; minute < 60; minute += 15) {
-                const timeOfDay = hour + minute / 60;
-                
-                // If we're past current time, use null (gap) - this is the key fix
-                if (timeOfDay > currentTimeOfDay) {
-                    data.push(null);
-                    continue;
-                }
-                
-                // If the ride is down, use null (gap)
-                if (isDown) {
-                    data.push(null);
-                    continue;
-                }
-                
-                // For operating rides, create realistic patterns based on time of day
-                const actualWaitTime = parseInt(currentWaitTime) || 30;
-                
-                // Add realistic variation based on time of day
-                let variation = 0;
-                if (timeOfDay < 11) variation = -0.2; // Lower in morning
-                else if (timeOfDay >= 11 && timeOfDay < 12) variation = 0.1; // Building up
-                else if (timeOfDay >= 12 && timeOfDay < 14) variation = 0.3; // Peak lunch
-                else if (timeOfDay >= 14 && timeOfDay < 16) variation = 0.2; // Afternoon
-                else if (timeOfDay >= 16 && timeOfDay < 18) variation = 0.4; // Peak afternoon
-                else if (timeOfDay >= 18 && timeOfDay < 20) variation = 0.2; // Evening
-                else if (timeOfDay >= 20) variation = -0.1; // Closing
-                
-                // Add ride-specific characteristics
-                let rideVariation = 0;
-                const nameLower = rideName.toLowerCase();
-                
-                if (nameLower.includes('mario kart') || nameLower.includes('harry potter')) {
-                    rideVariation = 0.3; // Popular rides
-                    if (timeOfDay >= 10 && timeOfDay < 11) rideVariation += 0.2;
-                    if (timeOfDay >= 14 && timeOfDay < 15) rideVariation += 0.2;
-                } else if (nameLower.includes('stardust') || nameLower.includes('dragon')) {
-                    rideVariation = 0.2;
-                    if (timeOfDay >= 16 && timeOfDay < 17) rideVariation += 0.1;
-                } else if (nameLower.includes('yoshi') || nameLower.includes('constellation')) {
-                    rideVariation = -0.1; // Less popular
-                    if (timeOfDay >= 9 && timeOfDay < 10) rideVariation += 0.1;
-                } else if (nameLower.includes('monsters') || nameLower.includes('frankenstein')) {
-                    rideVariation = 0.1;
-                    if (timeOfDay >= 18 && timeOfDay < 19) rideVariation += 0.2;
-                }
-                
-                // Add some randomness for realism
-                const randomVariation = (Math.random() - 0.5) * 0.15;
-                
-                const totalVariation = variation + rideVariation + randomVariation;
-                const waitTime = Math.max(5, Math.round(actualWaitTime * (1 + totalVariation)));
-                
-                data.push(waitTime);
-            }
-        }
-        
-        console.log(`Generated today's data for ${rideName}: ${data.length} points, current time: ${currentHour}:${currentMinute.toString().padStart(2, '0')}`);
-        console.log(`Data up to: ${Math.floor(currentTimeOfDay)}:${Math.round((currentTimeOfDay % 1) * 60).toString().padStart(2, '0')}`);
-        
-        return data;
+    // This function is now obsolete and will be removed. For now, it is disabled.
+    const generateTodayActualData = (currentWaitTime, rideName, rideStatus = null, weekAgoDataForRide = null) => {
+        // Obsolete function. Returning empty array.
+        return [];
     };
 
     // Function to generate 7 days ago data (using real historical data)
@@ -244,232 +205,290 @@ function App() {
     };
 
     // Function to render detailed wait time profile sparkline
-    const renderWaitTimeProfile = (todayData, weekAgoData, currentWaitTime, rideName) => {
+    const renderWaitTimeProfile = (todayData, weekAgoData, currentWaitTime, rideName, lastWeekData = null) => {
+        // Defensive: ensure we have the full time/wait objects
+        const safeTodayData = Array.isArray(todayData) ? todayData : [];
+        const safeWeekAgoData = Array.isArray(weekAgoData) ? weekAgoData : [];
+
+        // Extract time labels and wait times from the data
+        const todayTimeLabels = safeTodayData.map(item => item.time);
+        const todayWaitTimes = safeTodayData.map(item => item.wait);
+        const weekAgoTimeLabels = safeWeekAgoData.map(item => item.time);
+        const weekAgoWaitTimes = safeWeekAgoData.map(item => item.wait);
+
+        // Create a unified timeline using all unique time labels
+        const allTimeLabels = [...new Set([...todayTimeLabels, ...weekAgoTimeLabels])];
+        allTimeLabels.sort((a, b) => {
+            // Convert time strings to minutes for comparison
+            const timeToMinutes = (timeStr) => {
+                const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/);
+                if (!match) return 0;
+                let hour = parseInt(match[1]);
+                const minute = parseInt(match[2]);
+                const ampm = match[3];
+                if (ampm === 'PM' && hour !== 12) hour += 12;
+                if (ampm === 'AM' && hour === 12) hour = 0;
+                return hour * 60 + minute;
+            };
+            return timeToMinutes(a) - timeToMinutes(b);
+        });
+
+        // Create lookup maps for efficient data access
+        const todayDataMap = new Map();
+        safeTodayData.forEach(item => todayDataMap.set(item.time, item.wait));
+        const weekAgoDataMap = new Map();
+        safeWeekAgoData.forEach(item => weekAgoDataMap.set(item.time, item.wait));
+
+        // Map data to the unified timeline
+        const todayDataAligned = allTimeLabels.map(time => todayDataMap.get(time) ?? null);
+        const weekAgoDataAligned = allTimeLabels.map(time => weekAgoDataMap.get(time) ?? null);
+
         // Check if ride is down
         const isDown = !currentWaitTime || currentWaitTime === 'Down' || currentWaitTime === 'Weather Delay';
-        const downRides = ['Curse of the Werewolf', 'Mine-Cart Madness', 'Carousel'];
-        const isKnownDown = downRides.some(downRide => rideName.includes(downRide));
-        const isCurrentlyDown = isDown || isKnownDown;
-        
-        if (!weekAgoData || weekAgoData.length === 0) return null;
-        
-        // Always show today's data (with gaps for down times)
-        const hasTodayData = todayData && todayData.length > 0;
-        
-        const allData = hasTodayData ? [...todayData.filter(d => d !== null), ...weekAgoData] : weekAgoData;
-        const maxWait = Math.max(...allData);
-        const minWait = Math.min(...allData);
-        const range = maxWait - minWait;
-        
-        const width = 350; // Increased width for mobile
-        const height = 120; // Increased height for mobile
-        const padding = 25; // Increased padding for better mobile visibility
-        
-        // Generate points for today's data (create separate line segments for gaps)
-        let todayLineSegments = [];
-        if (todayData && todayData.length > 0) {
-            let currentSegment = [];
-            
-            for (let i = 0; i < todayData.length; i++) {
-                const value = todayData[i];
-                if (value !== null) {
-                    const timeProgress = i / (todayData.length - 1);
-                    const todayDataWidth = (todayData.length - 1) / (weekAgoData.length - 1);
-                    const x = padding + (timeProgress * todayDataWidth) * (width - padding * 2);
-                    const y = padding + (height - padding * 2) - ((value - minWait) / range) * (height - padding * 2);
-                    currentSegment.push(`${x},${y}`);
-                } else {
-                    // If we have a segment with points, save it and start a new one
-                    if (currentSegment.length > 0) {
-                        todayLineSegments.push(currentSegment.join(' '));
-                        currentSegment = [];
-                    }
-                }
-            }
-            
-            // Add the last segment if it has points
-            if (currentSegment.length > 0) {
-                todayLineSegments.push(currentSegment.join(' '));
-            }
+        // Check if we have any data to display
+        const hasTodayData = todayDataAligned.some(v => v !== null);
+        const hasWeekAgoData = weekAgoDataAligned.some(v => v !== null);
+
+        // Enhanced debug logging
+        console.log(`Chart debug for ${rideName}:`, {
+            todayDataLength: todayDataAligned.length,
+            weekAgoDataLength: weekAgoDataAligned.length,
+            hasTodayData,
+            hasWeekAgoData,
+            todayDataSample: todayDataAligned.slice(0, 5),
+            weekAgoDataSample: weekAgoDataAligned.slice(0, 5),
+            todayDataNonNull: todayDataAligned.filter(v => v !== null).length,
+            weekAgoDataNonNull: weekAgoDataAligned.filter(v => v !== null).length,
+            timeLabelsSample: allTimeLabels.slice(0, 5),
+            originalTodayData: todayData,
+            originalWeekAgoData: weekAgoData
+        });
+
+        // If no data, show fallback
+        if (!hasTodayData && !hasWeekAgoData) {
+            return <div style={{color: '#888', textAlign: 'center', margin: '10px'}}>No wait time data available for this ride.</div>;
         }
-        
-        // Generate points for week ago data (create separate line segments for gaps)
-        let weekAgoLineSegments = [];
-        let currentSegment = [];
-        
-        for (let i = 0; i < weekAgoData.length; i++) {
-            const value = weekAgoData[i];
-            if (value !== null) {
-                const x = padding + (i / (weekAgoData.length - 1)) * (width - padding * 2);
-                const y = padding + (height - padding * 2) - ((value - minWait) / range) * (height - padding * 2);
-                currentSegment.push(`${x},${y}`);
-            } else {
-                // If we have a segment with points, save it and start a new one
-                if (currentSegment.length > 0) {
-                    weekAgoLineSegments.push(currentSegment.join(' '));
-                    currentSegment = [];
-                }
-            }
-        }
-        
-        // Add the last segment if it has points
-        if (currentSegment.length > 0) {
-            weekAgoLineSegments.push(currentSegment.join(' '));
-        }
-        
-        // Generate rain percentage overlay
-        let rainOverlay = '';
+
+        // --- Data for Rain Chart ---
+        const rainData = allTimeLabels.map((timeLabel) => {
+            if (!weatherData || !weatherData.hourly) return 0;
+            // Extract hour from time label (e.g., "08:45 AM" -> 8)
+            const hourMatch = timeLabel.match(/(\d{1,2}):\d{2}\s*(AM|PM)/);
+            if (!hourMatch) return 0;
+            let hour = parseInt(hourMatch[1]);
+            const ampm = hourMatch[2];
+            if (ampm === 'PM' && hour !== 12) hour += 12;
+            if (ampm === 'AM' && hour === 12) hour = 0;
+            const weatherHour = weatherData.hourly.find(w => w.hour === hour);
+            return weatherHour ? weatherHour.precipitation : 0;
+        });
+
+        // --- Datasets for Chart.js ---
+        const datasets = [];
+
+        // Rain dataset (as bars, drawn first)
         if (weatherData) {
-            const rainPoints = weatherData.hourly.map((hour, index) => {
-                const x = padding + (index / (weatherData.hourly.length - 1)) * (width - padding * 2);
-                const rainHeight = (hour.precipitation / 100) * (height - padding * 2);
-                const y = height - padding - rainHeight;
-                return `${x},${y}`;
-            }).join(' ');
-            
-            if (rainPoints) {
-                rainOverlay = (
-                    <polyline
-                        fill="none"
-                        stroke="#007bff"
-                        strokeWidth="1"
-                        strokeOpacity="0.3"
-                        points={rainPoints}
-                    />
-                );
-            }
-        }
-        
-        // Calculate current time position (only if we have today's data)
-        let currentX = 0;
-        if (hasTodayData) {
-            const now = new Date();
-            // Get local time in 24-hour format
-            const currentHour = now.getHours();
-            const currentMinute = now.getMinutes();
-            const currentTimeOfDay = currentHour + currentMinute / 60;
-            
-            // Park hours: 10:00 AM to 9:00 PM (10:00 to 21:00)
-            const parkOpenTime = 10; // 10:00 AM
-            const parkCloseTime = 21; // 9:00 PM
-            
-            // Calculate position based on current time within park hours
-            let currentPosition = 0;
-            if (currentTimeOfDay >= parkOpenTime && currentTimeOfDay <= parkCloseTime) {
-                currentPosition = (currentTimeOfDay - parkOpenTime) / (parkCloseTime - parkOpenTime);
-            } else if (currentTimeOfDay < parkOpenTime) {
-                currentPosition = 0; // Before park opens
-            } else {
-                currentPosition = 1; // After park closes
-            }
-            
-            // Calculate the x position for current time indicator
-            currentX = padding + currentPosition * (width - padding * 2);
-            
-            console.log(`Current time: ${currentHour}:${currentMinute.toString().padStart(2, '0')} (${currentTimeOfDay.toFixed(2)})`);
-            console.log(`Position: ${currentPosition.toFixed(3)}, X: ${currentX.toFixed(1)}`);
-        }
-        
-        console.log(`Today's data: ${hasTodayData ? todayData.length : 0} points, Week ago: ${weekAgoData.length} points`);
-        
-        const handleClick = () => {
-            console.log('Graph clicked for ride:', rideName);
-            setFullscreenGraph({ 
-                rideName: rideName, 
-                todayData: hasTodayData ? todayData : [], 
-                weekAgoData: weekAgoData, 
-                currentWaitTime: currentWaitTime 
+            datasets.push({
+                type: 'bar',
+                label: 'Rain %',
+                data: rainData,
+                backgroundColor: 'rgba(135, 206, 250, 0.3)', // Light blue
+                borderColor: 'rgba(135, 206, 250, 0.5)',
+                borderWidth: 1,
+                yAxisID: 'yRain',
+                order: 3 // Draw behind lines
             });
+        }
+        
+        // Today's wait time dataset
+        if (hasTodayData && !isDown) {
+            datasets.push({
+                type: 'line',
+                label: 'Today',
+                data: todayDataAligned,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.2,
+                spanGaps: false,
+                pointRadius: 2,
+                pointHoverRadius: 4,
+                yAxisID: 'yWait',
+                order: 2
+            });
+        }
+
+        // 7 Days Ago wait time dataset
+        if (hasWeekAgoData) {
+            datasets.push({
+                type: 'line',
+                label: '7 Days Ago',
+                data: weekAgoDataAligned,
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                borderDash: [5, 5],
+                tension: 0.2,
+                spanGaps: false,
+                pointRadius: 1,
+                pointHoverRadius: 3,
+                yAxisID: 'yWait',
+                order: 1
+            });
+        }
+        
+        // --- Current Time Annotation ---
+        const now = new Date();
+        const currentTimeStr = now.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        });
+        
+        // Find the closest time label to current time
+        const timeToMinutes = (timeStr) => {
+            const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/);
+            if (!match) return 0;
+            let hour = parseInt(match[1]);
+            const minute = parseInt(match[2]);
+            const ampm = match[3];
+            if (ampm === 'PM' && hour !== 12) hour += 12;
+            if (ampm === 'AM' && hour === 12) hour = 0;
+            return hour * 60 + minute;
         };
         
+        const currentTimeMinutes = timeToMinutes(currentTimeStr);
+        let closestTimeIndex = 0;
+        let minDiff = Infinity;
+        
+        allTimeLabels.forEach((timeLabel, index) => {
+            const timeMinutes = timeToMinutes(timeLabel);
+            const diff = Math.abs(timeMinutes - currentTimeMinutes);
+            if (diff < minDiff) {
+                minDiff = diff;
+                closestTimeIndex = index;
+            }
+        });
+
+        const annotations = {};
+        if (closestTimeIndex >= 0 && closestTimeIndex < allTimeLabels.length) {
+            annotations.currentTimeLine = {
+                type: 'line',
+                xMin: closestTimeIndex,
+                xMax: closestTimeIndex,
+                borderColor: 'red',
+                borderWidth: 1,
+                borderDash: [6, 6],
+            };
+            // Add a point for the current time
+            if (hasTodayData && todayDataAligned[closestTimeIndex] !== null) {
+                annotations.currentTimePoint = {
+                    type: 'point',
+                    xValue: closestTimeIndex,
+                    yValue: todayDataAligned[closestTimeIndex],
+                    backgroundColor: 'red',
+                    radius: 5,
+                    borderColor: 'white',
+                    borderWidth: 2,
+                    yScaleID: 'yWait'
+                };
+            }
+        }
+
+        const allData = [...todayDataAligned, ...weekAgoDataAligned].filter(d => d !== null);
+        const maxWait = allData.length > 0 ? Math.max(...allData) : 60;
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { 
+                    display: true, 
+                    grid: { display: false },
+                    ticks: {
+                        maxTicksLimit: 8,
+                        maxRotation: 0,
+                        font: { size: 10 }
+                    }
+                },
+                yWait: { // Primary Y-axis for wait times
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    grid: { display: true, color: 'rgba(0,0,0,0.05)' },
+                    beginAtZero: true, 
+                    max: Math.max(30, Math.ceil(maxWait / 10) * 10 + 15), // Add 5-minute buffer
+                    title: {
+                        display: false,
+                    },
+                    ticks: {
+                        font: { size: 10 },
+                        callback: function(value) { return value + 'm'; }
+                    }
+                },
+                yRain: { // Secondary Y-axis for rain
+                    type: 'linear',
+                    display: false, // Hide the axis labels/line
+                    position: 'right',
+                    grid: {
+                        drawOnChartArea: false, // Don't show grid lines for rain
+                    },
+                    min: 0,
+                    max: 100, // 0-100%
+                }
+            },
+            plugins: {
+                legend: { 
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 10,
+                        padding: 15,
+                        font: { size: 11 },
+                        // Custom filter to hide the "Today" label for the point
+                        filter: (item) => item.text !== 'currentTimePoint'
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) { 
+                            if (context.dataset.yAxisID === 'yRain') {
+                                return `Rain: ${context.parsed.y}%`;
+                            }
+                            return `${context.dataset.label}: ${context.parsed.y} min`; 
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: annotations
+                }
+            },
+            interaction: { 
+                intersect: false, 
+                mode: 'index',
+            },
+            elements: { 
+                line: {
+                    borderWidth: 2.5
+                }
+            }
+        };
+        const chartData = { labels: allTimeLabels, datasets: datasets };
+
+        // If for any reason chartData is not valid, fallback
+        if (!Array.isArray(chartData.labels) || !Array.isArray(chartData.datasets)) {
+            return <div style={{color: '#888', textAlign: 'center', margin: '10px'}}>Chart data is invalid.</div>;
+        }
+
+        const handleClick = () => {
+            setFullscreenGraph({ rideName: rideName, isTodayAvailable: hasTodayData, weekAgoData: weekAgoDataAligned, currentWaitTime: currentWaitTime });
+        };
+
         return (
             <div className="wait-time-profile" style={{ display: 'block', marginTop: '10px', marginBottom: '10px' }}>
-                <div style={{ fontSize: '0.9em', color: '#666', marginBottom: '8px', textAlign: 'center' }}>
-                    Today vs 7 Days Ago {weatherData && <span style={{color: '#007bff'}}>• Rain % Overlay</span>}
-                    {isCurrentlyDown && (
-                        <div style={{color: '#dc3545', fontWeight: 'bold', marginTop: '4px'}}>
-                            ⚠️ {currentWaitTime || 'Down'}
-                        </div>
-                    )}
-                </div>
-                <svg 
-                    width={width + padding} 
-                    height={height + padding} 
-                    style={{ 
-                        border: '1px solid #ddd', 
-                        backgroundColor: '#f8f9fa', 
-                        maxWidth: '100%',
-                        cursor: 'pointer'
-                    }}
-                    onClick={handleClick}
-                >
-                    {/* Y-axis labels */}
-                    <text x="8" y={padding + 8} fontSize="10" fill="#666" textAnchor="start">{maxWait}m</text>
-                    <text x="8" y={height - padding + 8} fontSize="10" fill="#666" textAnchor="start">{minWait}m</text>
-                    <text x="8" y={height/2 + 8} fontSize="10" fill="#666" textAnchor="start">{Math.round((maxWait + minWait)/2)}m</text>
-                    
-                    {/* Rain percentage overlay */}
-                    {rainOverlay}
-                    
-                    {/* Week ago line (dashed) - render each segment separately */}
-                    {weekAgoLineSegments.map((segment, index) => (
-                        <polyline
-                            key={`week-ago-${index}`}
-                            fill="none"
-                            stroke="#28a745"
-                            strokeWidth="2"
-                            strokeDasharray="5,5"
-                            points={segment}
-                        />
-                    ))}
-                    
-                    {/* Today's line (solid) - render each segment separately */}
-                    {hasTodayData && todayLineSegments.map((segment, index) => (
-                        <polyline
-                            key={`today-${index}`}
-                            fill="none"
-                            stroke="#007bff"
-                            strokeWidth="3"
-                            points={segment}
-                        />
-                    ))}
-                    
-                    {/* Current time indicator - only if we have today's data */}
-                    {hasTodayData && currentX > 0 && (
-                        <>
-                            <line
-                                x1={currentX}
-                                y1={padding}
-                                x2={currentX}
-                                y2={height - padding}
-                                stroke="#dc3545"
-                                strokeWidth="2"
-                                strokeDasharray="3,3"
-                            />
-                            {/* Current wait time indicator */}
-                            <circle
-                                cx={currentX}
-                                cy={padding + (height - padding * 2) - ((currentWaitTime - minWait) / range) * (height - padding * 2)}
-                                r="5"
-                                fill="#dc3545"
-                            />
-                        </>
-                    )}
-                    
-                    {/* Legend */}
-                    {hasTodayData && <text x="8" y="18" fontSize="10" fill="#007bff">Today</text>}
-                    <text x="8" y={hasTodayData ? "30" : "18"} fontSize="10" fill="#28a745">7 Days Ago</text>
-                    {weatherData && <text x="8" y={hasTodayData ? "42" : "30"} fontSize="10" fill="#007bff" opacity="0.7">Rain %</text>}
-                    
-                    {/* Time labels */}
-                    <text x={padding} y={height + 18} fontSize="10" fill="#666" textAnchor="start">7AM</text>
-                    <text x={padding + (width - padding * 2) * 0.25} y={height + 18} fontSize="10" fill="#666" textAnchor="middle">10AM</text>
-                    <text x={padding + (width - padding * 2) * 0.5} y={height + 18} fontSize="10" fill="#666" textAnchor="middle">2PM</text>
-                    <text x={padding + (width - padding * 2) * 0.75} y={height + 18} fontSize="10" fill="#666" textAnchor="middle">6PM</text>
-                    <text x={width - padding} y={height + 18} fontSize="10" fill="#666" textAnchor="end">9PM</text>
-                </svg>
-                <div style={{ fontSize: '0.9em', color: '#666', textAlign: 'center', marginTop: '8px' }}>
-                    {hasTodayData ? `Current: ${currentWaitTime}min | Range: ${minWait}-${maxWait}min` : `Historical Range: ${minWait}-${maxWait}min`}
+                <div style={{ width: '100%', height: '120px', cursor: 'pointer' }} onClick={handleClick}>
+                    <Line data={chartData} options={chartOptions} />
                 </div>
             </div>
         );
@@ -479,165 +498,120 @@ function App() {
     const renderFullscreenModal = () => {
         if (!fullscreenGraph.rideName) return null;
         
-        const { rideName, todayData, weekAgoData, currentWaitTime } = fullscreenGraph;
-        
-        if (!weekAgoData || weekAgoData.length === 0) return null;
-        
+        const { rideName, isTodayAvailable, weekAgoData, currentWaitTime } = fullscreenGraph;
+        const rideTodayData = todayData[rideName] || [];
+
+        console.log('Rendering fullscreen modal for:', rideName);
+        console.log('Received isTodayAvailable flag:', isTodayAvailable);
+        console.log('Received weekAgoData:', weekAgoData);
+        console.log('Received currentWaitTime:', currentWaitTime);
+        console.log('rideTodayData from state:', rideTodayData);
+
         // Check if ride is down
         const isDown = !currentWaitTime || currentWaitTime === 'Down' || currentWaitTime === 'Weather Delay';
-        const downRides = ['Curse of the Werewolf', 'Mine-Cart Madness', 'Carousel'];
-        const isKnownDown = downRides.some(downRide => rideName.includes(downRide));
-        const isCurrentlyDown = isDown || isKnownDown;
+        const isWeekAgoDataAvailable = weekAgoData && weekAgoData.length > 0;
         
-        // If ride is down and no today's data, only show historical data
-        const hasTodayData = todayData && todayData.length > 0 && !isCurrentlyDown;
+        console.log('isWeekAgoDataAvailable:', isWeekAgoDataAvailable);
+        console.log('isDown:', isDown);
         
-        const allData = hasTodayData ? [...todayData, ...weekAgoData] : weekAgoData;
-        const maxWait = Math.max(...allData);
-        const minWait = Math.min(...allData);
-        const range = maxWait - minWait;
+        // If no historical data, show data preview
+        if (!isWeekAgoDataAvailable) {
+            return (
+                <div className="modal show" tabIndex="-1" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="modal-dialog modal-dialog-centered modal-xl">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{rideName} - Wait Time Analysis</h5>
+                                <button type="button" className="btn-close" onClick={() => setFullscreenGraph({ rideName: null })}></button>
+                            </div>
+                            <div className="modal-body" style={{ height: '70vh' }}>
+                                <div style={{ padding: '20px', textAlign: 'center' }}>
+                                    <h4>No Historical Data Available</h4>
+                                    <p><strong>Ride:</strong> {rideName}</p>
+                                    <p><strong>Today's Data Points:</strong> {rideTodayData.length}</p>
+                                    <p><strong>Historical Data Points:</strong> No data</p>
+                                    <p><strong>Current Wait Time:</strong> {currentWaitTime} minutes</p>
+                                    <p><strong>Status:</strong> {isDown ? 'Down' : 'Open'}</p>
+                                    <p>Click the X to close this modal</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // If we have data, show the Chart.js chart
+        const datasets = [];
         
-        const width = 800; // Much larger for fullscreen
-        const height = 400; // Much larger for fullscreen
-        const padding = 50; // Larger padding for fullscreen
-        
-        // Generate points for today's data (only if ride is not down)
-        let todayPoints = '';
-        if (hasTodayData) {
-            todayPoints = todayData.map((value, index) => {
-                const timeProgress = index / (todayData.length - 1);
-                const todayDataWidth = (todayData.length - 1) / (weekAgoData.length - 1);
-                const x = padding + (timeProgress * todayDataWidth) * (width - padding * 2);
-                const y = padding + (height - padding * 2) - ((value - minWait) / range) * (height - padding * 2);
-                return `${x},${y}`;
-            }).join(' ');
+        if (isTodayAvailable && !isDown) {
+            datasets.push({
+                label: 'Today',
+                data: rideTodayData,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                tension: 0.1,
+                spanGaps: true, // Connect lines over null data points
+            });
         }
         
-        // Generate points for week ago data
-        const weekAgoPoints = weekAgoData.map((value, index) => {
-            const x = padding + (index / (weekAgoData.length - 1)) * (width - padding * 2);
-            const y = padding + (height - padding * 2) - ((value - minWait) / range) * (height - padding * 2);
-            return `${x},${y}`;
-        }).join(' ');
-        
-        // Calculate current time position (only if we have today's data)
-        let currentX = 0;
-        if (hasTodayData) {
-            const now = new Date();
-            const currentHour = now.getHours();
-            const currentMinute = now.getMinutes();
-            const currentTimeOfDay = currentHour + currentMinute / 60;
-            const parkOpenTime = 7;
-            const todayDataEndTime = 7 + (todayData.length * 5) / 60;
-            const currentPosition = Math.max(0, Math.min(1, (currentTimeOfDay - parkOpenTime) / (todayDataEndTime - parkOpenTime)));
-            const todayDataWidth = (todayData.length - 1) / (weekAgoData.length - 1);
-            currentX = padding + (currentPosition * todayDataWidth) * (width - padding * 2);
+        if (isWeekAgoDataAvailable) {
+            datasets.push({
+                label: '7 Days Ago',
+                data: weekAgoData,
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.5)',
+                borderDash: [5, 5],
+                tension: 0.1,
+            });
         }
-        
+
+        const timeLabels = weekAgoData.map((_, index) => {
+            const hour = 10 + Math.floor((index * 15) / 60);
+            const minute = (index * 15) % 60;
+            return `${hour % 12 === 0 ? 12 : hour % 12}:${minute.toString().padStart(2, '0')} ${hour < 12 ? 'AM' : 'PM'}`;
+        });
+
+        const allData = [...(isTodayAvailable ? rideTodayData : []), ...weekAgoData].filter(d => d !== null);
+        const maxWait = Math.max(...allData, 0);
+
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(10, Math.ceil(maxWait / 5) * 5) // Ensure y-axis is reasonable
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: isTodayAvailable && !isDown ? 'Today vs 7 Days Ago - Full Screen View' : '7 Days Ago (Historical) - Full Screen View'
+                }
+            }
+        };
+
+        // Final chart data
+        const chartData = {
+            labels: timeLabels,
+            datasets: datasets
+        };
+
         return (
-            <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 1000
-            }}>
-                <div style={{
-                    backgroundColor: 'white',
-                    padding: '20px',
-                    borderRadius: '10px',
-                    maxWidth: '90vw',
-                    maxHeight: '90vh',
-                    overflow: 'auto'
-                }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                        <h3>{rideName} - Wait Time Analysis</h3>
-                        <button 
-                            className="btn btn-secondary"
-                            onClick={() => setFullscreenGraph({ rideName: null, todayData: null, weekAgoData: null, currentWaitTime: null })}
-                        >
-                            ✕ Close
-                        </button>
-                    </div>
-                    
-                    <div style={{ fontSize: '1.2em', color: '#666', marginBottom: '15px', textAlign: 'center' }}>
-                        {hasTodayData ? 'Today vs 7 Days Ago - Full Screen View' : '7 Days Ago (Historical) - Full Screen View'}
-                    </div>
-                    
-                    <svg 
-                        width={width + padding} 
-                        height={height + padding} 
-                        style={{ 
-                            border: '2px solid #ddd', 
-                            backgroundColor: '#f8f9fa', 
-                            maxWidth: '100%'
-                        }}
-                    >
-                        {/* Y-axis labels */}
-                        <text x="15" y={padding + 15} fontSize="16" fill="#666" textAnchor="start">{maxWait}m</text>
-                        <text x="15" y={height - padding + 15} fontSize="16" fill="#666" textAnchor="start">{minWait}m</text>
-                        <text x="15" y={height/2 + 15} fontSize="16" fill="#666" textAnchor="start">{Math.round((maxWait + minWait)/2)}m</text>
-                        
-                        {/* Week ago line (dashed) */}
-                        <polyline
-                            fill="none"
-                            stroke="#28a745"
-                            strokeWidth="4"
-                            strokeDasharray="8,8"
-                            points={weekAgoPoints}
-                        />
-                        
-                        {/* Today's line (solid) - only if ride is not down */}
-                        {hasTodayData && (
-                            <polyline
-                                fill="none"
-                                stroke="#007bff"
-                                strokeWidth="6"
-                                points={todayPoints}
-                            />
-                        )}
-                        
-                        {/* Current time indicator - only if we have today's data */}
-                        {hasTodayData && currentX > 0 && (
-                            <>
-                                <line
-                                    x1={currentX}
-                                    y1={padding}
-                                    x2={currentX}
-                                    y2={height - padding}
-                                    stroke="#dc3545"
-                                    strokeWidth="4"
-                                    strokeDasharray="6,6"
-                                />
-                                {/* Current wait time indicator */}
-                                <circle
-                                    cx={currentX}
-                                    cy={padding + (height - padding * 2) - ((currentWaitTime - minWait) / range) * (height - padding * 2)}
-                                    r="8"
-                                    fill="#dc3545"
-                                />
-                            </>
-                        )}
-                        
-                        {/* Legend */}
-                        {hasTodayData && <text x="15" y="30" fontSize="16" fill="#007bff">Today</text>}
-                        <text x="15" y={hasTodayData ? "50" : "30"} fontSize="16" fill="#28a745">7 Days Ago</text>
-                        
-                        {/* Time labels */}
-                        <text x={padding} y={height + 30} fontSize="16" fill="#666" textAnchor="start">7AM</text>
-                        <text x={padding + (width - padding * 2) * 0.25} y={height + 30} fontSize="16" fill="#666" textAnchor="middle">10AM</text>
-                        <text x={padding + (width - padding * 2) * 0.5} y={height + 30} fontSize="16" fill="#666" textAnchor="middle">2PM</text>
-                        <text x={padding + (width - padding * 2) * 0.75} y={height + 30} fontSize="16" fill="#666" textAnchor="middle">6PM</text>
-                        <text x={width - padding} y={height + 30} fontSize="16" fill="#666" textAnchor="end">9PM</text>
-                    </svg>
-                    
-                    <div style={{ fontSize: '1.1em', color: '#666', textAlign: 'center', marginTop: '15px' }}>
-                        {hasTodayData ? `Current: ${currentWaitTime}min | Range: ${minWait}-${maxWait}min` : `Historical Range: ${minWait}-${maxWait}min`}
+            <div className="modal show" tabIndex="-1" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                <div className="modal-dialog modal-dialog-centered modal-xl">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">{rideName} - Wait Time Analysis</h5>
+                            <button type="button" className="btn-close" onClick={() => setFullscreenGraph({ rideName: null })}></button>
+                        </div>
+                        <div className="modal-body" style={{ height: '70vh' }}>
+                            <Line data={chartData} options={chartOptions} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -650,6 +624,13 @@ function App() {
             setLoading(true);
             setError(null);
             
+            // Get today's date in YYYY-MM-DD format for the API (using Eastern Time)
+            const now = new Date();
+            const etOffset = -5; // Eastern Time is UTC-5 (or UTC-4 during DST)
+            const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const todayET = new Date(utc + (etOffset * 3600000));
+            const todayStr = todayET.toISOString().split('T')[0];
+            
             // Fetch today's live data from our backend
             const todayResponse = await fetch('/api/wait-times/today');
             if (!todayResponse.ok) {
@@ -658,84 +639,92 @@ function App() {
             const todayData = await todayResponse.json();
             console.log('Today\'s data received:', todayData);
             
-            // Fetch last week's historical data from our backend
-            const lastWeekResponse = await fetch('/api/wait-times/last-week');
+            // Fetch last week's historical data from our backend with today parameter
+            const lastWeekResponse = await fetch(`/api/wait-times/last-week?today=${todayStr}`);
             if (!lastWeekResponse.ok) {
                 throw new Error(`Failed to fetch last week's data: ${lastWeekResponse.status}`);
             }
             const lastWeekData = await lastWeekResponse.json();
             console.log('Last week\'s data received:', lastWeekData);
+            setLastWeekData(lastWeekData);
             
-            // Process today's rides data
-            const rides = todayData.rides.map(ride => {
-                // Determine land based on ride name using Epic Universe ride information
-                let land = 'Epic Universe';
-                const nameLower = ride.name.toLowerCase();
-                
-                if (nameLower.includes('stardust racers') || nameLower.includes('constellation carousel')) {
-                    land = 'Celestial Park';
-                } else if (nameLower.includes('mine-cart') || nameLower.includes('yoshi') || nameLower.includes('mario kart') || nameLower.includes('bowser')) {
-                    land = 'Super Nintendo World';
-                } else if (nameLower.includes('hiccup') || nameLower.includes('fyre drill') || nameLower.includes('dragon racer') || nameLower.includes('dragon') || nameLower.includes('toothless')) {
-                    land = 'Isle of Berk';
-                } else if (nameLower.includes('monsters') || nameLower.includes('frankenstein') || nameLower.includes('werewolf')) {
-                    land = 'Dark Universe';
-                } else if (nameLower.includes('harry potter') || nameLower.includes('ministry') || nameLower.includes('umbridge')) {
-                    land = 'The Wizarding World of Harry Potter - Ministry of Magic';
-                }
-                
-                return {
-                    name: ride.name,
-                    waitTime: ride.waitTime,
-                    status: ride.status,
-                    heightReq: ride.heightReq,
-                    land: land,
-                    rideCount: rideCounts[ride.name] || 0,
-                    completed: ride.completed || false
-                };
-            });
+            // The `rides` variable for the main UI list should be built from today's data.
+            const rides = todayData.rides
+                .filter(ride => ride.name !== 'Average') // Filter out "Average" ride
+                .map(ride => {
+                    // Determine land based on ride name
+                    let land = 'Epic Universe';
+                    const nameLower = ride.name.toLowerCase();
+                    
+                    if (nameLower.includes('stardust racers') || nameLower.includes('constellation carousel')) {
+                        land = 'Celestial Park';
+                    } else if (nameLower.includes('mine-cart') || nameLower.includes('yoshi') || nameLower.includes('mario kart') || nameLower.includes('bowser')) {
+                        land = 'Super Nintendo World';
+                    } else if (nameLower.includes('hiccup') || nameLower.includes('fyre drill') || nameLower.includes('dragon racer') || nameLower.includes('dragon') || nameLower.includes('toothless')) {
+                        land = 'Isle of Berk';
+                    } else if (nameLower.includes('monsters') || nameLower.includes('frankenstein') || nameLower.includes('werewolf')) {
+                        land = 'Dark Universe';
+                    } else if (nameLower.includes('harry potter') || nameLower.includes('ministry') || nameLower.includes('umbridge')) {
+                        land = 'The Wizarding World of Harry Potter - Ministry of Magic';
+                    }
+                    
+                    return {
+                        name: ride.name,
+                        waitTime: ride.waitTime, // This is the latest wait time from the server
+                        status: ride.status,
+                        heightReq: ride.heightReq || 'N/A',
+                        land: land,
+                        rideCount: rideCounts[ride.name] || 0,
+                        completed: ride.completed || false
+                    };
+                });
 
-            console.log('Total rides processed:', rides.length);
-
-            if (rides.length === 0) {
-                throw new Error('No rides found in the response');
+            if (!rides || rides.length === 0) {
+                throw new Error('No rides found in today\'s data');
             }
 
-            // Sort by ride count (lowest first), then by wait time
+            // Sort by wait time for the main list display
             rides.sort((a, b) => {
-                if (a.rideCount !== b.rideCount) {
-                    return a.rideCount - b.rideCount;
-                }
-                return (a.waitTime || 0) - (b.waitTime || 0);
+                if (a.waitTime === null && b.waitTime === null) return 0;
+                if (a.waitTime === null) return 1;
+                if (b.waitTime === null) return -1;
+                return a.waitTime - b.waitTime;
             });
             
             setRides(rides);
             
-            // Process last week's data for graphs
+            // Process graph data - KEEP FULL TIME/WAIT OBJECTS from the JSON structure
             const newTodayData = {};
             const newWeekAgoData = {};
+
+            // Process today's data for graphs
+            if (todayData && todayData.rides) {
+                todayData.rides.forEach(ride => {
+                    if (ride && ride.name && ride.wait_times) {
+                        // Keep the full time/wait objects, just filter out "Average"
+                        newTodayData[ride.name] = ride.wait_times.filter(wt => wt.time !== 'Average');
+                    }
+                });
+            }
             
-            rides.forEach(ride => {
-                // Generate today's data (up to current time)
-                newTodayData[ride.name] = generateTodayActualData(ride.waitTime, ride.name);
-                
-                // Use real historical data from last week
-                const lastWeekRide = lastWeekData.rides.find(r => r.name === ride.name);
-                if (lastWeekRide && lastWeekRide.wait_times) {
-                    // Convert the historical data to the format expected by the app
-                    const historicalData = lastWeekRide.wait_times.map(wt => wt.wait);
-                    newWeekAgoData[ride.name] = historicalData;
-                } else {
-                    // Fallback to generated data if no historical data available
-                    newWeekAgoData[ride.name] = generateWeekAgoData(ride.waitTime, ride.name);
-                }
-            });
+            // Process last week's data for graphs
+            if (lastWeekData && lastWeekData.rides) {
+                lastWeekData.rides.forEach(ride => {
+                    if (ride && ride.name && ride.wait_times) {
+                        // Keep the full time/wait objects, just filter out "Average"
+                        newWeekAgoData[ride.name] = ride.wait_times.filter(wt => wt.time !== 'Average');
+                    }
+                });
+            }
+
+            console.log("DEBUG: Processed Today's Graph Data (full objects):", newTodayData);
+            console.log("DEBUG: Processed Last Week's Graph Data (full objects):", newWeekAgoData);
             
             setTodayData(newTodayData);
             setWeekAgoData(newWeekAgoData);
             
             setLoading(false);
-            console.log('Successfully updated rides state');
+            console.log('Successfully updated rides state and graph data');
         } catch (err) {
             console.error('Error in fetchWaitTimes:', err);
             setError(`Failed to fetch wait times: ${err.message}. Please try again later.`);
@@ -763,7 +752,7 @@ function App() {
 
     React.useEffect(() => {
         fetchWaitTimes();
-        fetchWeatherData();
+        fetchWeatherData(); // Ensure weather data is loaded
         const interval = setInterval(fetchWaitTimes, 900000); // Update every 15 minutes
         return () => clearInterval(interval);
     }, []);
@@ -833,7 +822,11 @@ function App() {
 
     // Function to get wait time from last week's data at a specific time
     const getWaitTimeAtTime = (rideName, timeString) => {
-        if (!weekAgoData[rideName] || !timeString) return null;
+        if (!weekAgoData[rideName] || !timeString) {
+            // Fallback: return average wait time for the ride
+            const ride = rides.find(r => r.name === rideName);
+            return ride ? ride.waitTime : null;
+        }
         
         // Parse time string like "10:30 AM" to get hour and minute
         const timeMatch = timeString.match(/(\d+):(\d+)\s*(AM|PM)/);
@@ -849,20 +842,48 @@ function App() {
         // Convert to time of day (e.g., 10.5 for 10:30 AM)
         const timeOfDay = hour + minute / 60;
         
-        // Find the closest data point in weekAgoData
-        // weekAgoData has 5-minute intervals from 7:00 AM to 9:00 PM
-        const startTime = 7; // 7:00 AM
-        const intervalMinutes = 5;
-        const totalIntervals = weekAgoData[rideName].length;
+        // Find the closest time label in weekAgoData
+        const weekAgoRideData = weekAgoData[rideName];
+        if (!Array.isArray(weekAgoRideData) || weekAgoRideData.length === 0) {
+            // Fallback: return average wait time for the ride
+            const ride = rides.find(r => r.name === rideName);
+            return ride ? ride.waitTime : null;
+        }
         
-        // Calculate which interval this time corresponds to
-        const minutesFromStart = (timeOfDay - startTime) * 60;
-        const intervalIndex = Math.round(minutesFromStart / intervalMinutes);
+        // Find the closest time match
+        let closestTime = null;
+        let minDiff = Infinity;
         
-        // Ensure index is within bounds
-        const safeIndex = Math.max(0, Math.min(intervalIndex, totalIntervals - 1));
+        weekAgoRideData.forEach(item => {
+            if (item.time) {
+                const itemTimeMatch = item.time.match(/(\d+):(\d+)\s*(AM|PM)/);
+                if (itemTimeMatch) {
+                    let itemHour = parseInt(itemTimeMatch[1]);
+                    const itemMinute = parseInt(itemTimeMatch[2]);
+                    const itemIsPM = itemTimeMatch[3] === 'PM';
+                    
+                    if (itemIsPM && itemHour !== 12) itemHour += 12;
+                    if (!itemIsPM && itemHour === 12) itemHour = 0;
+                    
+                    const itemTimeOfDay = itemHour + itemMinute / 60;
+                    const diff = Math.abs(itemTimeOfDay - timeOfDay);
+                    
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestTime = item.wait;
+                    }
+                }
+            }
+        });
         
-        return weekAgoData[rideName][safeIndex];
+        // If we found a close match, return it; otherwise fallback to average
+        if (closestTime !== null) {
+            return closestTime;
+        } else {
+            // Fallback: return average wait time for the ride
+            const ride = rides.find(r => r.name === rideName);
+            return ride ? ride.waitTime : null;
+        }
     };
 
     // Ride Plan Management Functions
@@ -1491,12 +1512,67 @@ function App() {
         return '🌤️';
     };
 
+    // Function to refresh data from Thrill Data
+    const refreshData = async () => {
+        setRefreshLoading(true);
+        try {
+            console.log('🔄 Refreshing data from Thrill Data...');
+            const response = await fetch('/api/refresh-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                console.log('✅ Data refreshed successfully');
+                // Re-fetch all data to update the state properly
+                await fetchWaitTimes();
+                
+                // Show success message
+                alert('Data refreshed successfully! Latest wait times are now loaded.');
+            } else {
+                throw new Error(result.error || 'Failed to refresh data');
+            }
+        } catch (error) {
+            console.error('❌ Error refreshing data:', error);
+            alert(`Failed to refresh data: ${error.message}`);
+        } finally {
+            setRefreshLoading(false);
+        }
+    };
+
     if (loading) return <div className="container mt-5">Loading...</div>;
     if (error) return <div className="container mt-5 text-danger">{error}</div>;
 
     return (
         <div className="container mt-5">
-            <h1 className="mb-4">Universal Studios Ride Planner</h1>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h1>Universal Studios Ride Planner</h1>
+                <button 
+                    className={`btn btn-primary ${refreshLoading ? 'disabled' : ''}`}
+                    onClick={refreshData}
+                    disabled={refreshLoading}
+                >
+                    {refreshLoading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Refreshing...
+                        </>
+                    ) : (
+                        <>
+                            <span className="me-2">🔄</span>
+                            Refresh Data
+                        </>
+                    )}
+                </button>
+            </div>
             
             {/* Tab Navigation */}
             <ul className="nav nav-tabs mb-4" id="mainTabs" role="tablist">
@@ -1541,15 +1617,15 @@ function App() {
             {/* Tab Content */}
             {activeTab === 'rideInfo' && (
                 <div className="tab-content">
-                    <div className="row mb-4">
+            <div className="row mb-4">
                         <div className="col-md-6">
                             <div className="d-flex flex-column gap-2">
-                                <button className="btn btn-primary" onClick={fetchWaitTimes}>
-                                    Refresh Wait Times
-                                </button>
+                                <button className="btn btn-primary" onClick={refreshData}>
+                        Refresh Wait Times
+                    </button>
                                 <button className="btn btn-secondary" onClick={resetRideCounts}>
                                     Reset Ride Counts
-                                </button>
+                    </button>
                             </div>
                         </div>
                         <div className="col-md-6">
@@ -1564,15 +1640,19 @@ function App() {
                                     <option key={land} value={land}>{land}</option>
                                 ))}
                             </select>
-                        </div>
-                    </div>
+                </div>
+            </div>
 
-                    <div className="row">
+            <div className="row">
                         <div className="col-12">
                             <h2>All Rides</h2>
-                            <div className="list-group">
+                    <div className="list-group">
                                 {getAllRidesForDisplay().map(ride => {
+                                    if (!ride || !ride.name) return null; // Defensive: skip invalid rides
                                     const rideStatus = getRideStatus(ride);
+                                    // Defensive: always pass arrays, never undefined
+                                    const todayArr = Array.isArray(todayData[ride.name]) ? todayData[ride.name] : [];
+                                    const weekAgoArr = Array.isArray(weekAgoData[ride.name]) ? weekAgoData[ride.name] : [];
                                     return (
                                         <div 
                                             key={ride.name} 
@@ -1580,21 +1660,21 @@ function App() {
                                         >
                                             <div className="row">
                                                 <div className="col-md-4">
-                                                    <h5>{ride.name}</h5>
+                                <h5>{ride.name}</h5>
                                                     <p className={`mb-1 text-${rideStatus.color}`}>
                                                         <strong>Status:</strong> {rideStatus.text}
                                                     </p>
                                                     <p className="mb-1"><strong>Land:</strong> {ride.land}</p>
                                                     <p className="mb-1"><strong>Ridden:</strong> {ride.rideCount} times</p>
-                                                    <button 
+                                <button 
                                                         className="btn btn-success btn-sm"
                                                         onClick={() => incrementRideCount(ride.name)}
-                                                    >
+                                >
                                                         Rode This Ride (+1)
-                                                    </button>
-                                                </div>
+                                </button>
+                            </div>
                                                 <div className="col-md-8">
-                                                    {renderWaitTimeProfile(todayData[ride.name], weekAgoData[ride.name], ride.waitTime, ride.name)}
+                                                    {renderWaitTimeProfile(todayArr, weekAgoArr, ride.waitTime, ride.name, lastWeekData)}
                                                 </div>
                                             </div>
                                         </div>
@@ -1647,12 +1727,12 @@ function App() {
                                     </button>
                                 </div>
                             </div>
-                        </div>
                     </div>
+                </div>
 
                     <div className="row">
                         {!isAvailableRidesCollapsed && (
-                            <div className="col-md-6">
+                <div className="col-md-6">
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     <h3>Available Rides</h3>
                                     <button 
@@ -1704,7 +1784,7 @@ function App() {
                                     No items in your plan yet. Add rides or breaks to get started!
                                 </div>
                             ) : (
-                                <div className="list-group">
+                    <div className="list-group">
                                     {ridePlan.map((item, index) => (
                                         <div 
                                             key={`plan-item-${index}-${item.type}-${item.name}`}
@@ -1754,12 +1834,12 @@ function App() {
                                                         </div>
                                                         <div className="d-flex flex-column gap-1">
                                                             {isTrackingProgress && !item.status && (
-                                                                <button 
+                                    <button 
                                                                     className="btn btn-sm btn-outline-success"
                                                                     onClick={() => recordActualStart(index)}
-                                                                >
+                                    >
                                                                     Start
-                                                                </button>
+                                    </button>
                                                             )}
                                                             {isTrackingProgress && item.status === 'in-progress' && (
                                                                 <button 
@@ -1900,13 +1980,13 @@ function App() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        ))}
                     </div>
+                            )}
+                </div>
+            </div>
                 </div>
             )}
 
@@ -2000,7 +2080,7 @@ function App() {
                                                 <div className="text-end">
                                                     <div><strong>{hour.temperature}°F</strong></div>
                                                     <small className="text-muted">feels {hour.feelsLike}°F</small>
-                                                    <div><small className="text-info">{hour.precipitation}% rain</small></div>
+                                                    <div><small className="text-info" style={{color: '#87CEEB', fontWeight: 'bold'}}>{hour.precipitation}% rain</small></div>
                                                 </div>
                                             </div>
                                         ))}
@@ -2171,4 +2251,16 @@ function App() {
     );
 }
 
-ReactDOM.render(<App />, document.getElementById('root')); 
+const domContainer = document.querySelector('#root');
+ReactDOM.render(<App />, domContainer);
+
+// Register Chart.js components
+// ChartJS.register(
+//     CategoryScale,
+//     LinearScale,
+//     PointElement,
+//     LineElement,
+//     Title,
+//     Tooltip,
+//     Legend
+// ); 
