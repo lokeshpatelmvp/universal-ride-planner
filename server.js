@@ -208,23 +208,24 @@ app.post('/api/refresh-data', async (req, res) => {
         console.log('🔄 Triggering data refresh (Node.js version)...');
         
         // Master list of rides and their lands at Epic Universe
+        // Note: Using the truncated names from the Thrill Data API
         const rideLandMap = {
             "Stardust Racers": "Celestial Park",
             "Constellation Carousel": "Celestial Park",
             "Curse of the Werewolf": "Dark Universe",
             "Darkmoor Monster Makeup Experience": "Dark Universe",
-            "Monsters Unchained: The Frankenstein Experiment": "Dark Universe",
+            "Monsters Unch...Experiment": "Dark Universe",
             "Hiccup's Wing Gliders": "Isle of Berk",
             "Dragon Racer's Rally": "Isle of Berk",
             "Fyre Drill": "Isle of Berk",
             "The Untrainable Dragon": "Isle of Berk",
-            "Mario Kart: Bowser's Challenge": "SUPER NINTENDO WORLD",
-            "Bowser Jr. Challenge": "SUPER NINTENDO WORLD",
-            "Meet Toothless and Friends": "Isle of Berk",
-            "Harry Potter Battle at the Ministry": "Ministry of Magic",
+            "Meet Toothles...nd Friends": "Isle of Berk",
+            "Mario Kart: B... Challenge": "SUPER NINTENDO WORLD",
             "Yoshi's Adventure": "SUPER NINTENDO WORLD",
             "Mine-Cart Madness": "SUPER NINTENDO WORLD",
-            
+            "Bowser Jr. Challenge": "SUPER NINTENDO WORLD",
+            "Harry Potter ...e Ministry": "The Wizarding World of Harry Potter",
+
         };
         
         // Use Node.js to fetch data instead of Python
@@ -275,8 +276,6 @@ app.post('/api/refresh-data', async (req, res) => {
         const y = data.y; // Ride names
         const x = data.x; // Time labels
         
-        console.log("Ride names from Thrill Data API:", y); // <-- Temporary debug log
-
         console.log(`Extracted data: ${y.length} rides, ${x.length} time points`);
         
         // Process the data into the same format as the Python script
