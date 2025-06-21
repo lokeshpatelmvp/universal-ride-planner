@@ -16,6 +16,7 @@ import {
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { DateTime } from 'luxon';
+import config from './config.js';
 
 ChartJS.register(
     CategoryScale,
@@ -357,7 +358,7 @@ function App() {
     const fetchWaitTimes = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/api/wait-times/today');
+            const response = await fetch(`${config.apiBaseUrl}/api/wait-times/today`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -1175,7 +1176,7 @@ function App() {
 
     const fetchWeekAgoData = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/wait-times/last-week');
+            const response = await fetch(`${config.apiBaseUrl}/api/wait-times/last-week`);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
