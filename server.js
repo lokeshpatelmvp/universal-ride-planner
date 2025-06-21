@@ -209,21 +209,22 @@ app.post('/api/refresh-data', async (req, res) => {
         
         // Master list of rides and their lands at Epic Universe
         const rideLandMap = {
-            "Starfall Racers": "Celestial Park",
+            "Stardust Racers": "Celestial Park",
             "Constellation Carousel": "Celestial Park",
             "Curse of the Werewolf": "Dark Universe",
             "Darkmoor Monster Makeup Experience": "Dark Universe",
             "Monsters Unchained: The Frankenstein Experiment": "Dark Universe",
-            "Hiccup's Wing Gliders": "How to Train Your Dragon – Isle of Berk",
-            "Dragon Racer's Rally": "How to Train Your Dragon – Isle of Berk",
-            "Fyre Drill": "How to Train Your Dragon – Isle of Berk",
-            "The Untrainable Dragon": "How to Train Your Dragon – Isle of Berk",
+            "Hiccup's Wing Gliders": "Isle of Berk",
+            "Dragon Racer's Rally": "Isle of Berk",
+            "Fyre Drill": "Isle of Berk",
+            "The Untrainable Dragon": "Isle of Berk",
             "Mario Kart: Bowser's Challenge": "SUPER NINTENDO WORLD",
+            "Bowser Jr. Challenge": "SUPER NINTENDO WORLD",
+            "Meet Toothless and Friends": "Isle of Berk",
+            "Harry Potter Battle at the Ministry": "Ministry of Magic",
             "Yoshi's Adventure": "SUPER NINTENDO WORLD",
             "Mine-Cart Madness": "SUPER NINTENDO WORLD",
-            "Harry Potter and the Forbidden Journey": "The Wizarding World of Harry Potter",
-            "Flight of the Hippogriff": "The Wizarding World of Harry Potter",
-            "Ollivanders": "The Wizarding World of Harry Potter",
+            
         };
         
         // Use Node.js to fetch data instead of Python
@@ -274,6 +275,8 @@ app.post('/api/refresh-data', async (req, res) => {
         const y = data.y; // Ride names
         const x = data.x; // Time labels
         
+        console.log("Ride names from Thrill Data API:", y); // <-- Temporary debug log
+
         console.log(`Extracted data: ${y.length} rides, ${x.length} time points`);
         
         // Process the data into the same format as the Python script
