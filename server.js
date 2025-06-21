@@ -207,6 +207,25 @@ app.post('/api/refresh-data', async (req, res) => {
     try {
         console.log('🔄 Triggering data refresh (Node.js version)...');
         
+        // Master list of rides and their lands at Epic Universe
+        const rideLandMap = {
+            "Starfall Racers": "Celestial Park",
+            "Constellation Carousel": "Celestial Park",
+            "Curse of the Werewolf": "Dark Universe",
+            "Darkmoor Monster Makeup Experience": "Dark Universe",
+            "Monsters Unchained: The Frankenstein Experiment": "Dark Universe",
+            "Hiccup's Wing Gliders": "How to Train Your Dragon – Isle of Berk",
+            "Dragon Racer's Rally": "How to Train Your Dragon – Isle of Berk",
+            "Fyre Drill": "How to Train Your Dragon – Isle of Berk",
+            "The Untrainable Dragon": "How to Train Your Dragon – Isle of Berk",
+            "Mario Kart: Bowser's Challenge": "SUPER NINTENDO WORLD",
+            "Yoshi's Adventure": "SUPER NINTENDO WORLD",
+            "Mine-Cart Madness": "SUPER NINTENDO WORLD",
+            "Harry Potter and the Forbidden Journey": "The Wizarding World of Harry Potter",
+            "Flight of the Hippogriff": "The Wizarding World of Harry Potter",
+            "Ollivanders": "The Wizarding World of Harry Potter",
+        };
+        
         // Use Node.js to fetch data instead of Python
         const axios = require('axios');
         const cheerio = require('cheerio');
@@ -264,6 +283,9 @@ app.post('/api/refresh-data', async (req, res) => {
             const rideName = y[i];
             const waitTimes = z[i] || [];
             
+            // Look up the land for the current ride, default to 'Unknown'
+            const land = rideLandMap[rideName] || 'Unknown';
+
             // Convert wait times to the expected format
             const formattedWaitTimes = [];
             for (let j = 0; j < x.length; j++) {
@@ -292,7 +314,8 @@ app.post('/api/refresh-data', async (req, res) => {
                 name: rideName,
                 waitTime: currentWait,
                 status: currentWait !== null ? "Open" : "Down",
-                wait_times: formattedWaitTimes
+                wait_times: formattedWaitTimes,
+                land: land
             });
         }
         
