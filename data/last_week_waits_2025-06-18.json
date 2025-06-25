@@ -1,0 +1,3464 @@
+{
+  "date": "2025-06-18",
+  "park": "Epic Universe",
+  "rides": [
+    {
+      "name": "Bowser Jr. Challenge",
+      "waitTime": 5,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": 5
+        },
+        {
+          "time": "09:15 AM",
+          "wait": 5
+        },
+        {
+          "time": "09:30 AM",
+          "wait": 5
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 5
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 5
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 5
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 5
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 5
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 5
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 5
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 5
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 5
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 5
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 5
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 5
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 5
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 5
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 5
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 5
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 5
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 5
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 5
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 5
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 5
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 5
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 5
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 5
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 5
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 5
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 5
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "06:00 PM",
+          "wait": 10
+        },
+        {
+          "time": "06:15 PM",
+          "wait": 10
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 10
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 15
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 15
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 15
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 15
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 15
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 15
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 15
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 15
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 6
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 5
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 5
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 5
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 5
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 5
+        }
+      ]
+    },
+    {
+      "name": "Constellation Carousel",
+      "waitTime": 45,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": null
+        },
+        {
+          "time": "09:30 AM",
+          "wait": null
+        },
+        {
+          "time": "09:45 AM",
+          "wait": null
+        },
+        {
+          "time": "10:00 AM",
+          "wait": null
+        },
+        {
+          "time": "10:15 AM",
+          "wait": null
+        },
+        {
+          "time": "10:30 AM",
+          "wait": null
+        },
+        {
+          "time": "10:45 AM",
+          "wait": null
+        },
+        {
+          "time": "11:00 AM",
+          "wait": null
+        },
+        {
+          "time": "11:15 AM",
+          "wait": null
+        },
+        {
+          "time": "11:30 AM",
+          "wait": null
+        },
+        {
+          "time": "11:45 AM",
+          "wait": null
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 25
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 25
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 25
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 25
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 32
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 25
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 25
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 19
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 16
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 20
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 20
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 20
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 20
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 20
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 34
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 34
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 40
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 40
+        },
+        {
+          "time": "06:00 PM",
+          "wait": 40
+        },
+        {
+          "time": "06:15 PM",
+          "wait": 40
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 40
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 40
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 40
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 38
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 25
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 25
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 25
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 42
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "10:00 PM",
+          "wait": null
+        }
+      ]
+    },
+    {
+      "name": "Curse of the Werewolf",
+      "waitTime": 25,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": 10
+        },
+        {
+          "time": "09:15 AM",
+          "wait": 40
+        },
+        {
+          "time": "09:30 AM",
+          "wait": 45
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 19
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 15
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 17
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 32
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 43
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 50
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 58
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 65
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 65
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 65
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 65
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 65
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 65
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 66
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 85
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 88
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 105
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 105
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 105
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 105
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 96
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 95
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 88
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 49
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 70
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 72
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 72
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 70
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 70
+        },
+        {
+          "time": "05:45 PM",
+          "wait": null
+        },
+        {
+          "time": "06:00 PM",
+          "wait": null
+        },
+        {
+          "time": "06:15 PM",
+          "wait": null
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 70
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 70
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 70
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 70
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 70
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 70
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 70
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 66
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 59
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 55
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 55
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 55
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 47
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 25
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 25
+        }
+      ]
+    },
+    {
+      "name": "Dragon Racer's Rally",
+      "waitTime": 10,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": null
+        },
+        {
+          "time": "09:30 AM",
+          "wait": null
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 10
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 10
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 65
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 73
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 49
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 45
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 59
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 75
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 75
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 58
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 60
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 46
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 29
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 42
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 50
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 53
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 65
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 54
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 35
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 36
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 38
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 40
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:45 PM",
+          "wait": null
+        },
+        {
+          "time": "06:00 PM",
+          "wait": null
+        },
+        {
+          "time": "06:15 PM",
+          "wait": null
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 15
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 41
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 43
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 53
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 55
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 31
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 41
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 44
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 27
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 10
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 10
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 10
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 10
+        }
+      ]
+    },
+    {
+      "name": "Fyre Drill",
+      "waitTime": 18,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": null
+        },
+        {
+          "time": "09:30 AM",
+          "wait": null
+        },
+        {
+          "time": "09:45 AM",
+          "wait": null
+        },
+        {
+          "time": "10:00 AM",
+          "wait": null
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 5
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 5
+        },
+        {
+          "time": "10:45 AM",
+          "wait": null
+        },
+        {
+          "time": "11:00 AM",
+          "wait": null
+        },
+        {
+          "time": "11:15 AM",
+          "wait": null
+        },
+        {
+          "time": "11:30 AM",
+          "wait": null
+        },
+        {
+          "time": "11:45 AM",
+          "wait": null
+        },
+        {
+          "time": "12:00 PM",
+          "wait": null
+        },
+        {
+          "time": "12:15 PM",
+          "wait": null
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 28
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 38
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 52
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 88
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 120
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 120
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 96
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 60
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 60
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 60
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 60
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 60
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 60
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 60
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 60
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 60
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 77
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 80
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 80
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 80
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 55
+        },
+        {
+          "time": "05:45 PM",
+          "wait": null
+        },
+        {
+          "time": "06:00 PM",
+          "wait": null
+        },
+        {
+          "time": "06:15 PM",
+          "wait": null
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 25
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 20
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 18
+        },
+        {
+          "time": "09:15 PM",
+          "wait": null
+        },
+        {
+          "time": "09:30 PM",
+          "wait": null
+        },
+        {
+          "time": "09:45 PM",
+          "wait": null
+        },
+        {
+          "time": "10:00 PM",
+          "wait": null
+        }
+      ]
+    },
+    {
+      "name": "Harry Potter ...e Ministry",
+      "waitTime": 65,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": 191
+        },
+        {
+          "time": "09:30 AM",
+          "wait": 225
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 215
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 187
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 180
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 180
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 160
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 137
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 135
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 135
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 121
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 104
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 122
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 150
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 134
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 120
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 120
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 120
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 120
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 120
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 120
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 120
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 120
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 120
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 120
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 112
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 100
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 100
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 100
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 100
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 105
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 127
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 143
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 148
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 122
+        },
+        {
+          "time": "06:00 PM",
+          "wait": 135
+        },
+        {
+          "time": "06:15 PM",
+          "wait": 135
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 135
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 126
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 120
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 120
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 107
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 90
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 76
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 75
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 68
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 65
+        },
+        {
+          "time": "09:00 PM",
+          "wait": null
+        },
+        {
+          "time": "09:15 PM",
+          "wait": null
+        },
+        {
+          "time": "09:30 PM",
+          "wait": null
+        },
+        {
+          "time": "09:45 PM",
+          "wait": null
+        },
+        {
+          "time": "10:00 PM",
+          "wait": null
+        }
+      ]
+    },
+    {
+      "name": "Hiccup's Wing Gliders",
+      "waitTime": 15,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": null
+        },
+        {
+          "time": "09:30 AM",
+          "wait": null
+        },
+        {
+          "time": "09:45 AM",
+          "wait": null
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 25
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 46
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 87
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 116
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 130
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 130
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 130
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 117
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 103
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 115
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 115
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 115
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 115
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 90
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 90
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 90
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 90
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 90
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 90
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 98
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 114
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 140
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 138
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 110
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 110
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 110
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 110
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 110
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 110
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 110
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 110
+        },
+        {
+          "time": "05:45 PM",
+          "wait": null
+        },
+        {
+          "time": "06:00 PM",
+          "wait": null
+        },
+        {
+          "time": "06:15 PM",
+          "wait": null
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 90
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 101
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 110
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 94
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 90
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 90
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 90
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 116
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 99
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 87
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 65
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 57
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 27
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 15
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 15
+        }
+      ]
+    },
+    {
+      "name": "Mario Kart: B... Challenge",
+      "waitTime": 25,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": 96
+        },
+        {
+          "time": "09:15 AM",
+          "wait": 148
+        },
+        {
+          "time": "09:30 AM",
+          "wait": 150
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 134
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 120
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 146
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 163
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 185
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 190
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 190
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 190
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 190
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 190
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 190
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 190
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 190
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 167
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 120
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 120
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 115
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 96
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 79
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 75
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 75
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 86
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 115
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 145
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 150
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 150
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 150
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 149
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 135
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 124
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 120
+        },
+        {
+          "time": "05:30 PM",
+          "wait": null
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 100
+        },
+        {
+          "time": "06:00 PM",
+          "wait": 131
+        },
+        {
+          "time": "06:15 PM",
+          "wait": 150
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 144
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 135
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 131
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 117
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 100
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 63
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 60
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 60
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 60
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 55
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 30
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 25
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 25
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 25
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 25
+        }
+      ]
+    },
+    {
+      "name": "Meet Toothles...nd Friends",
+      "waitTime": 65,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": 30
+        },
+        {
+          "time": "09:00 AM",
+          "wait": 30
+        },
+        {
+          "time": "09:15 AM",
+          "wait": 30
+        },
+        {
+          "time": "09:30 AM",
+          "wait": 30
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 30
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 58
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 113
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 115
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 115
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 115
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 115
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 100
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 94
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 100
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 100
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 100
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 100
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 100
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 100
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 100
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 100
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 100
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 100
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 83
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 75
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 75
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 75
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 75
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 75
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 75
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 75
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 75
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 75
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 75
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 75
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 75
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 75
+        },
+        {
+          "time": "06:00 PM",
+          "wait": 75
+        },
+        {
+          "time": "06:15 PM",
+          "wait": 66
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 65
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 65
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 65
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 65
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 65
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 65
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 65
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 65
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 65
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 65
+        },
+        {
+          "time": "09:00 PM",
+          "wait": null
+        },
+        {
+          "time": "09:15 PM",
+          "wait": null
+        },
+        {
+          "time": "09:30 PM",
+          "wait": null
+        },
+        {
+          "time": "09:45 PM",
+          "wait": null
+        },
+        {
+          "time": "10:00 PM",
+          "wait": null
+        }
+      ]
+    },
+    {
+      "name": "Mine-Cart Madness",
+      "waitTime": 90,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": null
+        },
+        {
+          "time": "09:30 AM",
+          "wait": null
+        },
+        {
+          "time": "09:45 AM",
+          "wait": null
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 120
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 126
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 135
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 127
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 110
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 117
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 100
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 93
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 100
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 107
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 120
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 120
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 85
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 80
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 85
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 94
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 95
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 95
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 95
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 95
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 95
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 80
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 78
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 80
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 83
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 97
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 105
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 105
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 105
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 105
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 101
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 95
+        },
+        {
+          "time": "06:00 PM",
+          "wait": null
+        },
+        {
+          "time": "06:15 PM",
+          "wait": null
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 95
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 88
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 85
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 87
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 100
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 105
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 105
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 104
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 94
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 90
+        },
+        {
+          "time": "09:00 PM",
+          "wait": null
+        },
+        {
+          "time": "09:15 PM",
+          "wait": null
+        },
+        {
+          "time": "09:30 PM",
+          "wait": null
+        },
+        {
+          "time": "09:45 PM",
+          "wait": null
+        },
+        {
+          "time": "10:00 PM",
+          "wait": null
+        }
+      ]
+    },
+    {
+      "name": "Monsters Unch...Experiment",
+      "waitTime": 15,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": null
+        },
+        {
+          "time": "09:30 AM",
+          "wait": null
+        },
+        {
+          "time": "09:45 AM",
+          "wait": null
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 15
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 19
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 25
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 35
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 45
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 46
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 53
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 55
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 67
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 70
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 51
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 60
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 64
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 75
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 75
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 62
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 19
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 15
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 22
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 35
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 35
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 44
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 48
+        },
+        {
+          "time": "06:00 PM",
+          "wait": 55
+        },
+        {
+          "time": "06:15 PM",
+          "wait": 55
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 52
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 32
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 20
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 20
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 20
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 20
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 20
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 27
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 28
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 15
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 15
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 15
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 15
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 15
+        }
+      ]
+    },
+    {
+      "name": "Stardust Racers",
+      "waitTime": 45,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": null
+        },
+        {
+          "time": "07:30 AM",
+          "wait": null
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": null
+        },
+        {
+          "time": "09:15 AM",
+          "wait": null
+        },
+        {
+          "time": "09:30 AM",
+          "wait": null
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 15
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 39
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 59
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 60
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 60
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 60
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 66
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 75
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 75
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 75
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 75
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 75
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 51
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 52
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 60
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 56
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 48
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 25
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "05:45 PM",
+          "wait": null
+        },
+        {
+          "time": "06:00 PM",
+          "wait": null
+        },
+        {
+          "time": "06:15 PM",
+          "wait": null
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 42
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 41
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 25
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 25
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 42
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 45
+        }
+      ]
+    },
+    {
+      "name": "Yoshi's Adventure",
+      "waitTime": 15,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": 5
+        },
+        {
+          "time": "07:30 AM",
+          "wait": 5
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": null
+        },
+        {
+          "time": "09:00 AM",
+          "wait": 15
+        },
+        {
+          "time": "09:15 AM",
+          "wait": 31
+        },
+        {
+          "time": "09:30 AM",
+          "wait": 31
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 30
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 30
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 36
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 75
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 78
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 80
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 81
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 90
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 90
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 90
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 107
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 105
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 87
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 75
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 75
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 75
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 72
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 65
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 54
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 41
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 25
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 25
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 30
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 45
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 45
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 45
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 45
+        },
+        {
+          "time": "05:45 PM",
+          "wait": null
+        },
+        {
+          "time": "06:00 PM",
+          "wait": null
+        },
+        {
+          "time": "06:15 PM",
+          "wait": null
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 18
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 32
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 35
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 35
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 35
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 35
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 35
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 35
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 22
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 15
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 15
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 15
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 15
+        }
+      ]
+    },
+    {
+      "name": "Average",
+      "waitTime": 19,
+      "status": "Open",
+      "wait_times": [
+        {
+          "time": "07:15 AM",
+          "wait": 5
+        },
+        {
+          "time": "07:30 AM",
+          "wait": 5
+        },
+        {
+          "time": "07:45 AM",
+          "wait": null
+        },
+        {
+          "time": "08:00 AM",
+          "wait": null
+        },
+        {
+          "time": "08:15 AM",
+          "wait": null
+        },
+        {
+          "time": "08:30 AM",
+          "wait": null
+        },
+        {
+          "time": "08:45 AM",
+          "wait": 30
+        },
+        {
+          "time": "09:00 AM",
+          "wait": 31
+        },
+        {
+          "time": "09:15 AM",
+          "wait": 74
+        },
+        {
+          "time": "09:30 AM",
+          "wait": 81
+        },
+        {
+          "time": "09:45 AM",
+          "wait": 57
+        },
+        {
+          "time": "10:00 AM",
+          "wait": 57
+        },
+        {
+          "time": "10:15 AM",
+          "wait": 68
+        },
+        {
+          "time": "10:30 AM",
+          "wait": 80
+        },
+        {
+          "time": "10:45 AM",
+          "wait": 89
+        },
+        {
+          "time": "11:00 AM",
+          "wait": 88
+        },
+        {
+          "time": "11:15 AM",
+          "wait": 91
+        },
+        {
+          "time": "11:30 AM",
+          "wait": 93
+        },
+        {
+          "time": "11:45 AM",
+          "wait": 89
+        },
+        {
+          "time": "12:00 PM",
+          "wait": 82
+        },
+        {
+          "time": "12:15 PM",
+          "wait": 87
+        },
+        {
+          "time": "12:30 PM",
+          "wait": 83
+        },
+        {
+          "time": "12:45 PM",
+          "wait": 80
+        },
+        {
+          "time": "01:00 PM",
+          "wait": 74
+        },
+        {
+          "time": "01:15 PM",
+          "wait": 73
+        },
+        {
+          "time": "01:30 PM",
+          "wait": 77
+        },
+        {
+          "time": "01:45 PM",
+          "wait": 77
+        },
+        {
+          "time": "02:00 PM",
+          "wait": 70
+        },
+        {
+          "time": "02:15 PM",
+          "wait": 65
+        },
+        {
+          "time": "02:30 PM",
+          "wait": 62
+        },
+        {
+          "time": "02:45 PM",
+          "wait": 62
+        },
+        {
+          "time": "03:00 PM",
+          "wait": 65
+        },
+        {
+          "time": "03:15 PM",
+          "wait": 68
+        },
+        {
+          "time": "03:30 PM",
+          "wait": 67
+        },
+        {
+          "time": "03:45 PM",
+          "wait": 64
+        },
+        {
+          "time": "04:00 PM",
+          "wait": 60
+        },
+        {
+          "time": "04:15 PM",
+          "wait": 62
+        },
+        {
+          "time": "04:30 PM",
+          "wait": 67
+        },
+        {
+          "time": "04:45 PM",
+          "wait": 67
+        },
+        {
+          "time": "05:00 PM",
+          "wait": 68
+        },
+        {
+          "time": "05:15 PM",
+          "wait": 69
+        },
+        {
+          "time": "05:30 PM",
+          "wait": 63
+        },
+        {
+          "time": "05:45 PM",
+          "wait": 69
+        },
+        {
+          "time": "06:00 PM",
+          "wait": 74
+        },
+        {
+          "time": "06:15 PM",
+          "wait": 76
+        },
+        {
+          "time": "06:30 PM",
+          "wait": 63
+        },
+        {
+          "time": "06:45 PM",
+          "wait": 64
+        },
+        {
+          "time": "07:00 PM",
+          "wait": 64
+        },
+        {
+          "time": "07:15 PM",
+          "wait": 62
+        },
+        {
+          "time": "07:30 PM",
+          "wait": 59
+        },
+        {
+          "time": "07:45 PM",
+          "wait": 54
+        },
+        {
+          "time": "08:00 PM",
+          "wait": 52
+        },
+        {
+          "time": "08:15 PM",
+          "wait": 54
+        },
+        {
+          "time": "08:30 PM",
+          "wait": 51
+        },
+        {
+          "time": "08:45 PM",
+          "wait": 47
+        },
+        {
+          "time": "09:00 PM",
+          "wait": 32
+        },
+        {
+          "time": "09:15 PM",
+          "wait": 30
+        },
+        {
+          "time": "09:30 PM",
+          "wait": 26
+        },
+        {
+          "time": "09:45 PM",
+          "wait": 22
+        },
+        {
+          "time": "10:00 PM",
+          "wait": 19
+        }
+      ]
+    }
+  ]
+}

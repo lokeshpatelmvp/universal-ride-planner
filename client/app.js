@@ -1237,20 +1237,11 @@ function App() {
                 </li>
                 <li className="nav-item" role="presentation">
                     <button 
-                        className={`nav-link ${activeTab === 'weather' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('weather')}
-                        type="button"
-                    >
-                        Weather
-                    </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                    <button 
                         className={`nav-link ${activeTab === 'settings' ? 'active' : ''}`}
                         onClick={() => setActiveTab('settings')}
                         type="button"
                     >
-                        Settings
+                        Settings & Weather
                     </button>
                 </li>
             </ul>
@@ -1632,115 +1623,6 @@ function App() {
                 </div>
             )}
 
-            {activeTab === 'weather' && (
-                <div className="tab-content">
-                    {isWeatherLoading ? (
-                        <div className="text-center">
-                            <div className="spinner-border" role="status">
-                                <span className="visually-hidden">Loading weather...</span>
-                            </div>
-                            <p className="mt-2">Loading weather data...</p>
-                        </div>
-                    ) : weatherData ? (
-                        <div>
-                            {/* Current Weather */}
-                            <div className="card mb-4">
-                                <div className="card-header d-flex justify-content-between align-items-center">
-                                    <h5 className="mb-0">
-                                        {getWeatherIcon(weatherData.current.condition)} Current Weather - {weatherData.location}
-                                    </h5>
-                                    <button 
-                                        className="btn btn-sm btn-outline-primary"
-                                        onClick={fetchWeatherData}
-                                    >
-                                        Refresh
-                                    </button>
-                                </div>
-                                <div className="card-body">
-                                    <div className="row text-center">
-                                        <div className="col-6">
-                                            <h3 className="mb-0">{weatherData.current.temperature}°F</h3>
-                                            <small className="text-muted">Temperature</small>
-                                        </div>
-                                        <div className="col-6">
-                                            <h3 className="mb-0">{weatherData.current.feelsLike}°F</h3>
-                                            <small className="text-muted">Feels Like</small>
-                                        </div>
-                                    </div>
-                                    <div className="row mt-3">
-                                        <div className="col-6">
-                                            <strong>Condition:</strong> {weatherData.current.condition}
-                                        </div>
-                                        <div className="col-6">
-                                            <strong>Humidity:</strong> {weatherData.current.humidity}%
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Today's Forecast */}
-                            <div className="card mb-4">
-                                <div className="card-header">
-                                    <h5 className="mb-0">Today's Forecast</h5>
-                                </div>
-                                <div className="card-body">
-                                    <p className="mb-3">{weatherData.forecast.description}</p>
-                                    <div className="row text-center">
-                                        <div className="col-4">
-                                            <h5 className="mb-1">{weatherData.forecast.high}°F</h5>
-                                            <small className="text-muted">High</small>
-                                        </div>
-                                        <div className="col-4">
-                                            <h5 className="mb-1">{weatherData.forecast.low}°F</h5>
-                                            <small className="text-muted">Low</small>
-                                        </div>
-                                        <div className="col-4">
-                                            <h5 className="mb-1">{weatherData.forecast.chanceOfRain}%</h5>
-                                            <small className="text-muted">Rain Chance</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Hourly Forecast */}
-                            <div className="card">
-                                <div className="card-header">
-                                    <h5 className="mb-0">Hourly Forecast</h5>
-                                </div>
-                                <div className="card-body p-0">
-                                    <div className="list-group list-group-flush">
-                                        {weatherData.hourly.map((hour, index) => (
-                                            <div key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                                                <div className="d-flex align-items-center">
-                                                    <span className="me-3">{getWeatherIcon(hour.condition)}</span>
-                                                    <div>
-                                                        <strong>{hour.hour === 12 ? '12 PM' : hour.hour > 12 ? `${hour.hour - 12} PM` : `${hour.hour} AM`}</strong>
-                                                        <br/>
-                                                        <small className="text-muted">{hour.condition}</small>
-                                                    </div>
-                                                </div>
-                                                <div className="text-end">
-                                                    <div><strong>{hour.temperature}°F</strong></div>
-                                                    <small className="text-muted">feels {hour.feelsLike}°F</small>
-                                                    <div><small className="text-info" style={{color: '#87CEEB', fontWeight: 'bold'}}>{hour.precipitation}% rain</small></div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="text-center">
-                            <p>Weather data not available</p>
-                            <button className="btn btn-primary" onClick={fetchWeatherData}>
-                                Load Weather Data
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
-
             {activeTab === 'settings' && (
                 <div className="tab-content">
                     <div className="row">
@@ -1929,6 +1811,123 @@ function App() {
         </div>
     </div>
 </div>
+
+            {/* Weather Section */}
+            <div className="row">
+                <div className="col-12">
+                    <div className="card">
+                        <div className="card-header">
+                            <h5 className="mb-0">Weather Information</h5>
+                        </div>
+                        <div className="card-body">
+                            {isWeatherLoading ? (
+                                <div className="text-center">
+                                    <div className="spinner-border" role="status">
+                                        <span className="visually-hidden">Loading weather...</span>
+                                    </div>
+                                    <p className="mt-2">Loading weather data...</p>
+                                </div>
+                            ) : weatherData ? (
+                                <div>
+                                    {/* Current Weather */}
+                                    <div className="card mb-4">
+                                        <div className="card-header d-flex justify-content-between align-items-center">
+                                            <h6 className="mb-0">
+                                                {getWeatherIcon(weatherData.current.condition)} Current Weather - Universal Studios
+                                            </h6>
+                                            <button 
+                                                className="btn btn-sm btn-outline-primary"
+                                                onClick={fetchWeatherData}
+                                            >
+                                                Refresh
+                                            </button>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row text-center">
+                                                <div className="col-6">
+                                                    <h4 className="mb-0">{weatherData.current.temperature}°F</h4>
+                                                    <small className="text-muted">Temperature</small>
+                                                </div>
+                                                <div className="col-6">
+                                                    <h4 className="mb-0">{weatherData.current.feelsLike}°F</h4>
+                                                    <small className="text-muted">Feels Like</small>
+                                                </div>
+                                            </div>
+                                            <div className="row mt-3">
+                                                <div className="col-6">
+                                                    <strong>Condition:</strong> {weatherData.current.condition}
+                                                </div>
+                                                <div className="col-6">
+                                                    <strong>Humidity:</strong> {weatherData.current.humidity}%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Today's Forecast */}
+                                    <div className="card mb-4">
+                                        <div className="card-header">
+                                            <h6 className="mb-0">Today's Forecast</h6>
+                                        </div>
+                                        <div className="card-body">
+                                            <p className="mb-3">{weatherData.forecast.description}</p>
+                                            <div className="row text-center">
+                                                <div className="col-4">
+                                                    <h6 className="mb-1">{weatherData.forecast.high}°F</h6>
+                                                    <small className="text-muted">High</small>
+                                                </div>
+                                                <div className="col-4">
+                                                    <h6 className="mb-1">{weatherData.forecast.low}°F</h6>
+                                                    <small className="text-muted">Low</small>
+                                                </div>
+                                                <div className="col-4">
+                                                    <h6 className="mb-1">{weatherData.forecast.chanceOfRain}%</h6>
+                                                    <small className="text-muted">Rain Chance</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Hourly Forecast */}
+                                    <div className="card">
+                                        <div className="card-header">
+                                            <h6 className="mb-0">Hourly Forecast</h6>
+                                        </div>
+                                        <div className="card-body p-0">
+                                            <div className="list-group list-group-flush">
+                                                {weatherData.hourly.map((hour, index) => (
+                                                    <div key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                                                        <div className="d-flex align-items-center">
+                                                            <span className="me-3">{getWeatherIcon(hour.condition)}</span>
+                                                            <div>
+                                                                <strong>{hour.hour === 12 ? '12 PM' : hour.hour > 12 ? `${hour.hour - 12} PM` : `${hour.hour} AM`}</strong>
+                                                                <br/>
+                                                                <small className="text-muted">{hour.condition}</small>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-end">
+                                                            <div><strong>{hour.temperature}°F</strong></div>
+                                                            <small className="text-muted">feels {hour.feelsLike}°F</small>
+                                                            <div><small className="text-info" style={{color: '#87CEEB', fontWeight: 'bold'}}>{hour.precipitation}% rain</small></div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center">
+                                    <p>Weather data not available</p>
+                                    <button className="btn btn-primary" onClick={fetchWeatherData}>
+                                        Load Weather Data
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
                 </div>
             )}
 
