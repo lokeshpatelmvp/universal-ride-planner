@@ -374,7 +374,13 @@ function App() {
                 });
             }
             
-            setRides(data.rides || []);
+            // Filter out the "Average" ride and ensure all rides have proper data
+            const filteredRides = (data.rides || []).filter(ride => ride.name !== 'Average').map(ride => ({
+                ...ride,
+                rideCount: rideCounts[ride.name] || 0
+            }));
+            
+            setRides(filteredRides);
             setTodayData(processedData);
             setError(null);
         } catch (error) {
@@ -424,9 +430,58 @@ function App() {
 
     // Filter rides by selected land
     const getFilteredRides = () => {
-        const filtered = rides.filter(ride => selectedLand === 'All Lands' || ride.land === selectedLand);
+        // Get rides from current data
+        const currentRides = rides.filter(ride => selectedLand === 'All Lands' || ride.land === selectedLand);
         
-        // Include all rides in planning, even down ones (in case they come back up)
+        // Get rides from historical data that might not be in current data
+        const historicalRides = [];
+        if (weekAgoData) {
+            Object.keys(weekAgoData).forEach(rideName => {
+                // Skip the "Average" ride
+                if (rideName === 'Average') return;
+                
+                // Check if this ride is already in current rides
+                const existingRide = currentRides.find(r => r.name === rideName);
+                if (!existingRide) {
+                    // Try to find land information from current rides
+                    const landInfo = rides.find(r => r.name === rideName)?.land || 'Unknown';
+                    
+                    // Create a ride object from historical data
+                    const historicalRide = {
+                        name: rideName,
+                        waitTime: null, // No current wait time
+                        status: 'No Current Data',
+                        land: landInfo,
+                        rideCount: rideCounts[rideName] || 0
+                    };
+                    historicalRides.push(historicalRide);
+                }
+            });
+        }
+        
+        // Combine current and historical rides
+        const allRides = [...currentRides, ...historicalRides];
+        
+        // Filter by selected land (but include rides with unknown land if "All Lands" is selected)
+        const filtered = allRides.filter(ride => 
+            selectedLand === 'All Lands' || 
+            ride.land === selectedLand || 
+            (selectedLand === 'All Lands' && ride.land === 'Unknown')
+        );
+        
+        // Debug logging
+        console.log('Ride filtering debug:', {
+            totalRides: rides.length,
+            currentRides: currentRides.length,
+            historicalRides: historicalRides.length,
+            allRides: allRides.length,
+            filtered: filtered.length,
+            selectedLand,
+            rideNames: filtered.map(r => r.name)
+        });
+        
+        // In the ride planner, show ALL rides regardless of status (even down ones)
+        // This allows users to plan for rides that might come back up
         return filtered;
     };
 
@@ -444,6 +499,12 @@ function App() {
                     status: 'down',
                     text: ride.status,
                     color: ride.status === 'Weather Delay' ? 'warning' : 'danger'
+                };
+            } else if (ride.status === 'No Current Data') {
+                return {
+                    status: 'no-data',
+                    text: 'No current data (use historical)',
+                    color: 'secondary'
                 };
             } else if (ride.status === 'Open' && ride.waitTime !== null) {
                 return {
@@ -542,11 +603,26 @@ function App() {
     // Ride Plan Management Functions
     const addRideToPlan = (ride) => {
         const newPlan = [...ridePlan];
-        const rideTime = ride.waitTime + 5; // Wait time + 5 minutes for actual ride
+        
+        // Use current wait time if available, otherwise use historical data or default
+        let waitTime = ride.waitTime;
+        if (!waitTime || ride.status === 'No Current Data') {
+            // Try to get historical wait time for current time
+            const now = new Date();
+            const currentTime = now.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+            const historicalWaitTime = getWaitTimeAtTime(ride.name, currentTime);
+            waitTime = historicalWaitTime || 30; // Default to 30 minutes if no data
+        }
+        
+        const rideTime = waitTime + 5; // Wait time + 5 minutes for actual ride
         newPlan.push({
             type: 'ride',
             name: ride.name,
-            waitTime: ride.waitTime,
+            waitTime: waitTime,
             rideTime: 5,
             totalTime: rideTime,
             land: ride.land,
