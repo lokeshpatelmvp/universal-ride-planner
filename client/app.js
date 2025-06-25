@@ -537,7 +537,7 @@ function App() {
     // Function to get wait time from last week's data at a specific time
     const getWaitTimeAtTime = (rideName, timeString) => {
         if (!weekAgoData[rideName] || !timeString) {
-            // Fallback: return average wait time for the ride
+            // Fallback: return average wait time for the ride from current data
             const ride = rides.find(r => r.name === rideName);
             return ride ? ride.waitTime : null;
         }
@@ -559,7 +559,7 @@ function App() {
         // Find the closest time label in weekAgoData
         const weekAgoRideData = weekAgoData[rideName];
         if (!Array.isArray(weekAgoRideData) || weekAgoRideData.length === 0) {
-            // Fallback: return average wait time for the ride
+            // Fallback: return average wait time for the ride from current data
             const ride = rides.find(r => r.name === rideName);
             return ride ? ride.waitTime : null;
         }
@@ -590,13 +590,23 @@ function App() {
             }
         });
         
-        // If we found a close match, return it; otherwise fallback to average
+        // If we found a close match, return it
         if (closestTime !== null) {
             return closestTime;
         } else {
-            // Fallback: return average wait time for the ride
-            const ride = rides.find(r => r.name === rideName);
-            return ride ? ride.waitTime : null;
+            // No data at specific time - calculate daily average from historical data
+            const validWaitTimes = weekAgoRideData
+                .filter(item => item.wait !== null && item.wait !== undefined)
+                .map(item => item.wait);
+            
+            if (validWaitTimes.length > 0) {
+                const dailyAverage = validWaitTimes.reduce((sum, wait) => sum + wait, 0) / validWaitTimes.length;
+                return Math.round(dailyAverage);
+            } else {
+                // No historical data available - fall back to current wait time
+                const ride = rides.find(r => r.name === rideName);
+                return ride ? ride.waitTime : null;
+            }
         }
     };
 
