@@ -121,21 +121,80 @@ app.get('/api/weather', async (req, res) => {
         const response = await axios.get(url);
         const weatherData = response.data;
 
+        // Get current time in Eastern Time (Universal Studios timezone)
+        const now = new Date();
+        const etOffset = -5; // Eastern Time is UTC-5 (or UTC-4 during DST)
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const etTime = new Date(utc + (etOffset * 3600000));
+        
+        // Get today's date in ET
+        const todayStart = new Date(etTime);
+        todayStart.setHours(0, 0, 0, 0);
+        const todayEnd = new Date(todayStart);
+        todayEnd.setHours(23, 59, 59, 999);
+
+        console.log('Weather API Debug:');
+        console.log('Current time (UTC):', now.toISOString());
+        console.log('Current time (ET):', etTime.toString());
+        console.log('Today start (ET):', todayStart.toString());
+        console.log('Today end (ET):', todayEnd.toString());
+
+        // Transform hourly data and filter for today only
+        const todayHours = [];
+        const futureHours = [];
+        
+        weatherData.hourly.forEach(hour => {
+            const hourDate = new Date(hour.dt * 1000);
+            const hourDateET = new Date(hourDate.getTime() + (etOffset * 3600000));
+            
+            // Check if this hour is today
+            if (hourDateET >= todayStart && hourDateET <= todayEnd) {
+                const hourData = {
+                    hour: hourDateET.getHours(),
+                    temperature: Math.round(hour.temp),
+                    feelsLike: Math.round(hour.feels_like),
+                    precipitation: Math.round(hour.pop * 100),
+                    condition: hour.weather[0].main,
+                    icon: hour.weather[0].icon,
+                    timestamp: hourDateET.getTime()
+                };
+                
+                // Separate past and future hours
+                if (hourDateET <= etTime) {
+                    todayHours.push(hourData);
+                } else {
+                    futureHours.push(hourData);
+                }
+            }
+        });
+
+        // Sort past hours by timestamp (oldest first)
+        todayHours.sort((a, b) => a.timestamp - b.timestamp);
+        // Sort future hours by timestamp (oldest first)
+        futureHours.sort((a, b) => a.timestamp - b.timestamp);
+
+        // Combine: past hours + future hours
+        const allTodayHours = [...todayHours, ...futureHours];
+
+        console.log('Today hours found:', allTodayHours.length);
+        console.log('First 5 hours:', allTodayHours.slice(0, 5).map(h => `${h.hour}:00`));
+
         // Transform data to match the structure expected by the frontend
         const transformedData = {
             current: {
                 temperature: Math.round(weatherData.current.temp),
                 feelsLike: Math.round(weatherData.current.feels_like),
                 condition: weatherData.current.weather[0].main,
-                icon: weatherData.current.weather[0].icon
+                icon: weatherData.current.weather[0].icon,
+                humidity: weatherData.current.humidity
             },
-            hourly: weatherData.hourly.slice(0, 24).map(hour => ({
-                hour: new Date(hour.dt * 1000).getHours(),
-                temperature: Math.round(hour.temp),
-                feelsLike: Math.round(hour.feels_like),
-                precipitation: Math.round(hour.pop * 100), // Probability of precipitation
-                condition: hour.weather[0].main,
-                icon: hour.weather[0].icon,
+            hourly: allTodayHours.map(hour => ({
+                hour: hour.hour,
+                temperature: hour.temperature,
+                feelsLike: hour.feelsLike,
+                precipitation: hour.precipitation,
+                condition: hour.condition,
+                icon: hour.icon,
             })),
         };
         
